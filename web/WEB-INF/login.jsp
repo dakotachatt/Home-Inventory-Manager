@@ -23,7 +23,7 @@
         <div class="content-container">
             <form action="login" method="post">
                 <h2>Login</h2>
-                <input class="text-field form-input" type="text" name="username" value="" placeholder="Username">
+                <input class="text-field form-input" type="text" name="email" value="" placeholder="Email Address">
                 <br>
                 <input class="text-field form-input" type="password" name="password" value="" placeholder="Password">
                 <br>

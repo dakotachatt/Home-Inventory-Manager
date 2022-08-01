@@ -22,26 +22,26 @@ public class InventoryServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
+        String email = (String) session.getAttribute("email");
         String action = request.getParameter("action");
         String itemIdString = request.getParameter("itemId");
         UserService us = new UserService();
         InventoryService is = new InventoryService();
         
         try{
-            Users user = us.getUser(username);
+            User user = us.getUser(email);
             request.setAttribute("user", user);
             
-            List<Items> items = user.getItemsList();
+            List<Item> items = user.getItemList();
             request.setAttribute("items", items);
             
-            List<Categories> categories = is.getAllCategories();
+            List<Category> categories = is.getAllCategories();
             request.setAttribute("categories", categories);
             
             if(action != null && itemIdString != null) {
                 if(action.equals("delete")) {
                     int itemId = Integer.parseInt(itemIdString);
-                    boolean wasDeleted = is.deleteItem(itemId, username);
+                    boolean wasDeleted = is.deleteItem(itemId, email);
                     
                     if(wasDeleted) {
                         String message = "Item has been deleted";

@@ -2,7 +2,7 @@ package dataaccess;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import models.Categories;
+import models.Category;
 
 /**
  *
@@ -11,22 +11,22 @@ import models.Categories;
  */
 public class CategoriesDB {
     
-    public List<Categories> getAll() throws Exception {
+    public List<Category> getAll() throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         
         try {
-            List<Categories> categories = em.createNamedQuery("Categories.findAll", Categories.class).getResultList();
+            List<Category> categories = em.createNamedQuery("Categories.findAll", Category.class).getResultList();
             return categories;
         } finally {
             em.close();
         }
     }
     
-    public Categories getCategory(int categoryId) throws Exception {
+    public Category getCategory(int categoryId) throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         
         try {
-            Categories category = em.find(Categories.class, categoryId);
+            Category category = em.find(Category.class, categoryId);
             return category;
         } finally {
             em.close();

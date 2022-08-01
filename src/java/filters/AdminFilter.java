@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package filters;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -18,7 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Users;
+import models.User;
 import services.UserService;
 
 /**
@@ -33,13 +25,13 @@ public class AdminFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
         UserService us = new UserService();
-        String username = (String) session.getAttribute("username");
+        String email = (String) session.getAttribute("email");
         
         try {
-            Users user = us.getUser(username);
+            User user = us.getUser(email);
             
-            // If user session does not exist, redirect to login screen
-            if(user != null && !user.getIsAdmin()) {
+            // If user session exists and user does not have admin role privileges, redirect to inventory page
+            if(user != null && user.getRole().getRoleId() == 2) {
                 httpResponse.sendRedirect("inventory");
                 return;
             }

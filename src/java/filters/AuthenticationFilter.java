@@ -22,10 +22,10 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
-        String username = (String) session.getAttribute("username");
+        String email = (String) session.getAttribute("email");
         
         // If user session does not exist, redirect to login screen
-        if(username == null) {
+        if(email == null) {
             httpResponse.sendRedirect("login");
             return;
         }

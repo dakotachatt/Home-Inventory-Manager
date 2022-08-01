@@ -4,9 +4,9 @@ import dataaccess.CategoriesDB;
 import dataaccess.ItemsDB;
 import dataaccess.UserDB;
 import java.util.List;
-import models.Categories;
-import models.Items;
-import models.Users;
+import models.Category;
+import models.Item;
+import models.User;
 import exceptions.*;
 
 /**
@@ -16,35 +16,35 @@ import exceptions.*;
  */
 public class InventoryService {
     
-    public List<Categories> getAllCategories() throws Exception {
+    public List<Category> getAllCategories() throws Exception {
         CategoriesDB catDB = new CategoriesDB();
-        List<Categories> categories = catDB.getAll();
+        List<Category> categories = catDB.getAll();
         return categories;
     }
     
-    public Categories getCategory(int categoryId) throws Exception {
+    public Category getCategory(int categoryId) throws Exception {
         CategoriesDB catDB = new CategoriesDB();
-        Categories category = catDB.getCategory(categoryId);
+        Category category = catDB.getCategory(categoryId);
         return category;
     }
     
-    public List<Items> getAllItems() throws Exception {
+    public List<Item> getAllItems() throws Exception {
         ItemsDB itemsDB = new ItemsDB();
-        List<Items> items = itemsDB.getAll();
+        List<Item> items = itemsDB.getAll();
         return items;
     }
     
-    public List<Items> getAllUserItems(String username) throws Exception {
+    public List<Item> getAllUserItems(String username) throws Exception {
         ItemsDB itemsDB = new ItemsDB();
         UserService us = new UserService();
-        Users user = us.getUser(username);
-        List<Items> items = itemsDB.getAllUserItems(user);
+        User user = us.getUser(username);
+        List<Item> items = itemsDB.getAllUserItems(user);
         return items;
     }
     
-    public Items getItem(int itemId) throws Exception {
+    public Item getItem(int itemId) throws Exception {
         ItemsDB itemsDB = new ItemsDB();
-        Items item = itemsDB.getItem(itemId);
+        Item item = itemsDB.getItem(itemId);
         return item;
     }
     
@@ -52,10 +52,10 @@ public class InventoryService {
             CategoriesDB catDB = new CategoriesDB();
             ItemsDB itemsDB = new ItemsDB();
             UserDB userDB = new UserDB();
-            Users user = userDB.getUser(username);
-            Categories category = catDB.getCategory(categoryID);
+            User user = userDB.getUser(username);
+            Category category = catDB.getCategory(categoryID);
 
-            Items item = new Items(); //ItemID is auto generated after being inserted into Items table
+            Item item = new Item(); //ItemID is auto generated after being inserted into Items table
             item.setCategory(category);
             item.setItemName(itemName);
             item.setPrice(price);
@@ -66,9 +66,9 @@ public class InventoryService {
     
     public boolean deleteItem(int itemId, String loggedInUsername) throws Exception {
         ItemsDB itemsDB = new ItemsDB();
-        Items item = itemsDB.getItem(itemId);
+        Item item = itemsDB.getItem(itemId);
         
-        if(item.getOwner().getUsername().equals(loggedInUsername)) {
+        if(item.getOwner().getEmail().equals(loggedInUsername)) {
             itemsDB.deleteItem(item);            
             return true;
         } else {

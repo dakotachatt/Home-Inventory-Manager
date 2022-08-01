@@ -42,22 +42,31 @@
                 <h2>Manage Users</h2>
                 <table>
                     <tr>
-                        <th>Username</th>
+                        <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
                         <th>Delete</th>
                         <th>Edit</th>
                     </tr>
 
                     <c:forEach var="user" items="${users}">
                         <tr>
-                            <td>${user.username}</td>
+                            <td>${user.email}</td>
                             <td>${user.firstName}</td>
                             <td>${user.lastName}</td>
+                            <td>${user.role.roleName}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${user.active}">Active</c:when>
+                                    <c:otherwise>Inactive</c:otherwise>
+                                </c:choose>
+                            </td>
                             <td>
                                 <c:url value="/admin" var="deleteURL">
                                     <c:param name="action" value="delete" />
-                                    <c:param name="username" value="${user.username}" />
+                                    <c:param name="email" value="${user.email}" />
                                 </c:url>
 
                                 <a class="btn btn-danger" role="button" href="${deleteURL}">Delete</a>
@@ -66,7 +75,7 @@
                                 <%-- Gets the user's email for the particular row being edited --%>
                                 <c:url value="/admin" var="editURL">
                                     <c:param name="action" value="edit" />
-                                    <c:param name="username" value="${user.username}" />
+                                    <c:param name="email" value="${user.email}" />
                                 </c:url>
 
                                 <a class="btn btn-dark" role="button" href="${editURL}">Update</a>                        
@@ -80,11 +89,9 @@
                 <div class="add-form">
                     <form action="" method="post">
                         <h2>Add User</h2>
-                        <input class="text-field form-input" type="text" name="newUsername" value="" placeholder="Username" required>
-                        <br>
-                        <input class="text-field form-input" type="password" name="newPassword" value="" placeholder="Password" required>
-                        <br>
                         <input class="text-field form-input" type="email" name="newEmail" value="" placeholder="Email Address" required>
+                        <br>
+                        <input class="text-field form-input" type="password" name="newPassword" value="" placeholder="Password" required
                         <br>
                         <input class="text-field form-input" type="text" name="newFName" value="" placeholder="First Name" required>
                         <br>
@@ -103,17 +110,18 @@
             <c:if test="${userSelected != null}">
                 <div class="update-form">
                     <form action="" method="post">
-                        <h2>Edit User: ${editUser.username}</h2>
+                        <h2>Edit User: ${editUser.firstName} ${editUser.lastName}</h2>
                         <input class="text-field form-input" type="password" name="editPassword" value="${editUser.password}" placeholder="Password" required>
-                        <br>
-                        <input class="text-field form-input" type="email" name="editEmail" value="${editUser.email}" placeholder="Email Address" required>
                         <br>
                         <input class="text-field form-input" type="text" name="editFName" value="${editUser.firstName}" placeholder="First Name" required>
                         <br>
                         <input class="text-field form-input" type="text" name="editLName" value="${editUser.lastName}" placeholder="Last Name" required>
                         <br>
-                        <input type="checkbox" id="editIsAdmin" name="editIsAdmin" <c:if test="${editUser.isAdmin}">checked="checked"</c:if>>
-                        <label for="editIsAdmin">Admin</label>
+                        <select name="role">
+                            <c:forEach var="role" items="${roles}">
+                                <option value="${role.roleId}" <c:if test="${editUser.role.roleId == role.roleId}">selected="selected"</c:if>>${role.roleName}</option>
+                            </c:forEach>
+                        </select>
                         <br>
                         <input type="checkbox" id="editIsActive" name="editIsActive" <c:if test="${editUser.active}">checked="checked"</c:if>>
                         <label for="editIsActive">Active</label>

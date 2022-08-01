@@ -27,44 +27,44 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Dakota
  */
 @Entity
-@Table(name = "categories")
+@Table(name = "category")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Categories.findAll", query = "SELECT c FROM Categories c")
-    , @NamedQuery(name = "Categories.findByCategoryID", query = "SELECT c FROM Categories c WHERE c.categoryID = :categoryID")
-    , @NamedQuery(name = "Categories.findByCategoryName", query = "SELECT c FROM Categories c WHERE c.categoryName = :categoryName")})
-public class Categories implements Serializable {
+    @NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c")
+    , @NamedQuery(name = "Category.findByCategoryId", query = "SELECT c FROM Category c WHERE c.categoryId = :categoryId")
+    , @NamedQuery(name = "Category.findByCategoryName", query = "SELECT c FROM Category c WHERE c.categoryName = :categoryName")})
+public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "CategoryID")
-    private Integer categoryID;
+    @Column(name = "category_id")
+    private Integer categoryId;
     @Basic(optional = false)
-    @Column(name = "CategoryName")
+    @Column(name = "category_name")
     private String categoryName;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
-    private List<Items> itemsList;
+    private List<Item> itemList;
 
-    public Categories() {
+    public Category() {
     }
 
-    public Categories(Integer categoryID) {
-        this.categoryID = categoryID;
+    public Category(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Categories(Integer categoryID, String categoryName) {
-        this.categoryID = categoryID;
+    public Category(Integer categoryId, String categoryName) {
+        this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
 
-    public Integer getCategoryID() {
-        return categoryID;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryID(Integer categoryID) {
-        this.categoryID = categoryID;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getCategoryName() {
@@ -76,29 +76,29 @@ public class Categories implements Serializable {
     }
 
     @XmlTransient
-    public List<Items> getItemsList() {
-        return itemsList;
+    public List<Item> getItemList() {
+        return itemList;
     }
 
-    public void setItemsList(List<Items> itemsList) {
-        this.itemsList = itemsList;
+    public void setItemList(List<Item> itemList) {
+        this.itemList = itemList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (categoryID != null ? categoryID.hashCode() : 0);
+        hash += (categoryId != null ? categoryId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Categories)) {
+        if (!(object instanceof Category)) {
             return false;
         }
-        Categories other = (Categories) object;
-        if ((this.categoryID == null && other.categoryID != null) || (this.categoryID != null && !this.categoryID.equals(other.categoryID))) {
+        Category other = (Category) object;
+        if ((this.categoryId == null && other.categoryId != null) || (this.categoryId != null && !this.categoryId.equals(other.categoryId))) {
             return false;
         }
         return true;
@@ -106,7 +106,7 @@ public class Categories implements Serializable {
 
     @Override
     public String toString() {
-        return "models.Categories[ categoryID=" + categoryID + " ]";
+        return "models.Category[ categoryId=" + categoryId + " ]";
     }
     
 }

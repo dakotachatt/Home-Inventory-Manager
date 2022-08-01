@@ -1,9 +1,11 @@
 package services;
 
+import dataaccess.RoleDB;
 import dataaccess.UserDB;
 import exceptions.*;
 import java.util.List;
-import models.Users;
+import models.Role;
+import models.User;
 
 /**
  *
@@ -11,48 +13,52 @@ import models.Users;
  */
 public class UserService {
     
-    public List<Users> getAll() throws Exception {
+    public List<User> getAll() throws Exception {
         UserDB userDB = new UserDB();
-        List<Users> users = userDB.getAll();
+        List<User> users = userDB.getAll();
         return users;
     }
     
-    public Users getUser(String username) throws Exception {
+    public User getUser(String email) throws Exception {
         UserDB userDB = new UserDB();
-        Users user = userDB.getUser(username);
+        User user = userDB.getUser(email);
         return user;
     }
     
-    public void addUser(String username, String password, String email, String firstName, String lastName, boolean active, boolean isAdmin) throws Exception {
-        if(username != null && !username.equals("") && password != null && !password.equals("") && email != null && !email.equals("") && firstName != null && !firstName.equals("") && lastName != null && !lastName.equals("")) {
+    public void addUser(String email, String firstName, String lastName, String password) throws Exception {
+        if(password != null && !password.equals("") && email != null && !email.equals("") && firstName != null && !firstName.equals("") && lastName != null && !lastName.equals("")) {
             UserDB userDB = new UserDB();
-            Users user = new Users(username, password, email, firstName, lastName, active, isAdmin);
+            RoleDB roleDB = new RoleDB();
+            User user = new User(email, true, firstName, lastName, password);
+            Role role = roleDB.getRole(2);
+            user.setRole(role);
             userDB.addUser(user);            
         } else {
             throw new MissingInputsException();
         }
     }
     
-    public void deleteUser(String loggedInUsername, String usernameToDelete) throws Exception {
-        if(!loggedInUsername.equals(usernameToDelete)) { // Ensures the admin cannot delete their own account
+    public void deleteUser(String loggedInEmail, String emailToDelete) throws Exception {
+        if(!loggedInEmail.equals(emailToDelete)) { // Ensures the admin cannot delete their own account
             UserDB userDB = new UserDB();
-            Users user = userDB.getUser(usernameToDelete);
+            User user = userDB.getUser(emailToDelete);
             userDB.deleteUser(user);
         } else {
             throw new DeleteOwnAccountException();
         }  
     }
     
-    public void updateUser(String username, String password, String email, String firstName, String lastName, boolean active, boolean isAdmin) throws Exception {
-        if(username != null && !username.equals("") && password != null && !password.equals("") && email != null && !email.equals("") && firstName != null && !firstName.equals("") && lastName != null && !lastName.equals("")) {
+    public void updateUser(String email, String password, String firstName, String lastName, boolean active, int roleID) throws Exception {
+        if(password != null && !password.equals("") && firstName != null && !firstName.equals("") && lastName != null && !lastName.equals("")) {
             UserDB userDB = new UserDB();
-            Users user = userDB.getUser(username);
+            RoleDB roleDB = new RoleDB();
+            User user = userDB.getUser(email);
+            Role role = roleDB.getRole(roleID);
             user.setPassword(password);
-            user.setEmail(email);
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setActive(active);
-            user.setIsAdmin(isAdmin);
+            user.setRole(role);
             userDB.updateUser(user);   
         } else {
             throw new MissingInputsException();

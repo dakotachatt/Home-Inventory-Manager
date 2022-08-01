@@ -3,9 +3,9 @@ package dataaccess;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import models.Categories;
-import models.Items;
-import models.Users;
+import models.Category;
+import models.Item;
+import models.User;
 import services.InventoryService;
 import services.UserService;
 
@@ -16,48 +16,48 @@ import services.UserService;
  */
 public class ItemsDB {
     
-    public List<Items> getAll() throws Exception {
+    public List<Item> getAll() throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         
         try {
-            List<Items> items = em.createNamedQuery("Items.findAll", Items.class).getResultList();
+            List<Item> items = em.createNamedQuery("Items.findAll", Item.class).getResultList();
             return items;
         } finally {
             em.close();
         }
     }
     
-    public List<Items> getAllUserItems(Users user) throws Exception {
+    public List<Item> getAllUserItems(User user) throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         
         try {
-            List<Items> items = user.getItemsList();
+            List<Item> items = user.getItemList();
             return items;
         } finally {
             em.close();
         }
     }
     
-    public Items getItem(int itemId) throws Exception {
+    public Item getItem(int itemId) throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         
         try {
-            Items item = em.find(Items.class, itemId);
+            Item item = em.find(Item.class, itemId);
             return item;
         } finally {
             em.close();
         }
     }
     
-    public void addItem(Items item) throws Exception {
+    public void addItem(Item item) throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
         
         try {
-            Categories category = item.getCategory();
-            category.getItemsList().add(item);
-            Users user = item.getOwner();
-            user.getItemsList().add(item);
+            Category category = item.getCategory();
+            category.getItemList().add(item);
+            User user = item.getOwner();
+            user.getItemList().add(item);
             
             trans.begin();
             em.persist(item);
@@ -72,15 +72,15 @@ public class ItemsDB {
         }
     }
     
-    public void deleteItem(Items item) throws Exception {
+    public void deleteItem(Item item) throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
         
         try {
-            Categories category = item.getCategory();
-            category.getItemsList().remove(item);
-            Users user = item.getOwner();
-            user.getItemsList().remove(item);
+            Category category = item.getCategory();
+            category.getItemList().remove(item);
+            User user = item.getOwner();
+            user.getItemList().remove(item);
             
             trans.begin();
             em.remove(em.merge(item));

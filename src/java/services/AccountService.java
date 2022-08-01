@@ -1,6 +1,6 @@
 package services;
 
-import models.Users;
+import models.User;
 
 /**
  *
@@ -9,15 +9,16 @@ import models.Users;
  */
 public class AccountService {
     
-    public Users login(String username, String password) {
+    public User login(String email, String password) {
         
         UserService us = new UserService();
-        Users user = null;
+        User user = null;
         
         try {
-            user = us.getUser(username);
+            user = us.getUser(email);
         
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error in AccountService");
         }
         

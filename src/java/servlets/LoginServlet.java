@@ -2,14 +2,13 @@ package servlets;
 
 import dataaccess.UserDB;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Users;
+import models.User;
 import services.AccountService;
 import services.UserService;
 
@@ -27,7 +26,7 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         UserService us = new UserService();
-        Users user = null;
+        User user = null;
         
         //Logging user out
         if(request.getParameter("logout") != null) {
@@ -51,7 +50,7 @@ public class LoginServlet extends HttpServlet {
         
         //If logged in session exists, redirect to applicable page
         if(user != null) { //If navigate manually to /login, and user session still active, redirect to /inventory
-            if(user.getIsAdmin()) {
+            if(user.getRole().getRoleId() == 1 || user.getRole().getRoleId() == 3) {
                 response.sendRedirect("admin");
                 return;
             } else {
@@ -70,20 +69,20 @@ public class LoginServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         AccountService account = new AccountService();
-        String usernameParam = request.getParameter("username").toLowerCase(); //Ensures case insensitive usernames
-        Users user = account.login(usernameParam, request.getParameter("password"));
+        String emailParam = request.getParameter("email").toLowerCase(); //Ensures case insensitive usernames
+        User user = account.login(emailParam, request.getParameter("password"));
         
         //Checks if username or password field is empty
-        if(usernameParam == null || usernameParam.equals("") || request.getParameter("password") == null || request.getParameter("password").equals("")) {
+        if(emailParam == null || emailParam.equals("") || request.getParameter("password") == null || request.getParameter("password").equals("")) {
             String message = "Please enter a username and password";
             request.setAttribute("message", message);
             getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
             return;
             
         } else if(user != null) { //If login successful, redirect to inventory or admin page
-            session.setAttribute("username", user.getUsername());
+            session.setAttribute("email", user.getEmail());
 
-            if(user.getIsAdmin()) {
+            if(user.getRole().getRoleId() == 1 || user.getRole().getRoleId() == 3) {
                 response.sendRedirect("admin");
                 return;
             } else {

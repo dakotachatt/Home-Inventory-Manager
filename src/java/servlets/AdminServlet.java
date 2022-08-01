@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Users;
+import models.Role;
+import models.User;
+import services.RoleService;
 import services.UserService;
 
 /**
@@ -23,30 +25,34 @@ public class AdminServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
-        String managedUserName = request.getParameter("username");
+        String email = (String) session.getAttribute("email");
+        String managedEmail = request.getParameter("email");
         String action = request.getParameter("action");
         UserService us = new UserService();
-        Users user = null;
+        RoleService rs = new RoleService();
+        User user = null;
         
         //Get all users to display in manage users table
         try {
-            List<Users> users = us.getAll();
+            List<User> users = us.getAll();
             request.setAttribute("users", users);
             
-            if(managedUserName != null && action != null) { 
-                request.setAttribute("userSelected", managedUserName); // Used as check to show or hide add/edit user forms
+            List<Role> roles = rs.getAll();
+            request.setAttribute("roles", roles);
+            
+            if(managedEmail != null && action != null) { 
+                request.setAttribute("userSelected", managedEmail); // Used as check to show or hide add/edit user forms
                 
                 if(action.toLowerCase().equals("delete")) { //Creates a user object to be referenced when deleting the user
-                    us.deleteUser(username, managedUserName); //pass in logged in username as well as username of user to delete to ensure admin cannot delete their own account
+                    us.deleteUser(email, managedEmail); //pass in logged in email as well as email of user to delete to ensure admin cannot delete their own account
                     
-                    String message = "User: " + managedUserName + " has been deleted";
+                    String message = "User: " + managedEmail + " has been deleted";
                     session.setAttribute("message", message);
                     
                     response.sendRedirect("admin");
                     return;                    
                 } else if (action.toLowerCase().equals("edit")) { //Creates a user object when edit button is clicked in order to pre-fill edit user form
-                    user = us.getUser(managedUserName);
+                    user = us.getUser(managedEmail);
                     request.setAttribute("editUser", user);                    
                 }
             } else if (action != null) {
@@ -81,43 +87,38 @@ public class AdminServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
-        String managedUserName = request.getParameter("username");
+        String managedEmail = request.getParameter("email");
         UserService us = new UserService();
         
         try {
             if(action != null) {
                 if(action.equals("add")) {
-                    String userName = request.getParameter("newUsername");
-                    String password = request.getParameter("newPassword");
                     String email = request.getParameter("newEmail");
                     String firstName = request.getParameter("newFName");
                     String lastName = request.getParameter("newLName");
+                    String password = request.getParameter("newPassword");
 
-                    us.addUser(userName, password, email, firstName, lastName, true, false);
+                    us.addUser(email, firstName, lastName,  password);
 
-                    String message = "User: " + userName + " has been added";
+                    String message = "User: " + email + " has been added";
                     session.setAttribute("message", message);
 
                     response.sendRedirect("admin");
                     return;
                 } else if (action.toLowerCase().equals("edit")) {
-                    String userName = managedUserName;
+                    String email = managedEmail;
                     String password = request.getParameter("editPassword");
-                    String email = request.getParameter("editEmail");
                     String firstName = request.getParameter("editFName");
                     String lastName = request.getParameter("editLName");
+                    int roleId = Integer.parseInt(request.getParameter("role"));
                     boolean isActive = false;
                     if(request.getParameter("editIsActive") != null) {
                         isActive = true;
                     }
-                    boolean isAdmin = false;
-                    if(request.getParameter("editIsAdmin") != null) {
-                        isAdmin = true;
-                    }
                     
-                    us.updateUser(userName, password, email, firstName, lastName, isActive, isAdmin);
+                    us.updateUser(email, password, firstName, lastName, isActive, roleId);
                     
-                    String message = "User: " + managedUserName + " has been updated";
+                    String message = "User: " + managedEmail + " has been updated";
                     session.setAttribute("message", message);   
                     
                     response.sendRedirect("admin");
