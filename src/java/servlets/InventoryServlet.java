@@ -55,6 +55,8 @@ public class InventoryServlet extends HttpServlet {
             
         } catch (Exception e) {
             System.out.println("Inventory Servlet Get error");
+            response.sendRedirect("inventory");
+            return;  
         }
         
         getServletContext().getRequestDispatcher("/WEB-INF/inventory.jsp").forward(request, response);
@@ -67,7 +69,7 @@ public class InventoryServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
+        String email = (String) session.getAttribute("email");
         String action = request.getParameter("action");
         String categoryInput = request.getParameter("categories");
         String itemName = request.getParameter("itemName").toLowerCase();
@@ -82,7 +84,7 @@ public class InventoryServlet extends HttpServlet {
                 if(action.equals("add")) {
                     int categoryID = Integer.parseInt(categoryInput);
                     double price = Double.parseDouble(priceInput);
-                    is.addItem(categoryID, itemName, price, username);
+                    is.addItem(categoryID, itemName, price, email);
                     
                     String message = "Item has been added";
                     session.setAttribute("message", message);

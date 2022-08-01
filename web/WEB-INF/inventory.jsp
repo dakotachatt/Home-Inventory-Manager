@@ -57,7 +57,7 @@
                             <td>
                                 <c:url value="/inventory" var="deleteURL">
                                     <c:param name="action" value="delete" />
-                                    <c:param name="itemId" value="${item.itemID}" />
+                                    <c:param name="itemId" value="${item.itemId}" />
                                 </c:url>
 
                                 <a class="btn btn-danger" role="button" href="${deleteURL}">Delete</a>
@@ -72,7 +72,7 @@
                 <form action="inventory" method="post">
                     <select class="form-input" name="categories" aria-label="Category Drop Down Menu" required>
                         <c:forEach var="category" items="${categories}">
-                            <option value="${category.categoryID}" aria-label="${category.categoryName}">${category.categoryName}</option>
+                            <option value="${category.categoryId}" aria-label="${category.categoryName}">${category.categoryName}</option>
                         </c:forEach>
                     </select>
                     <br>

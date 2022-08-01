@@ -14,7 +14,7 @@ import services.UserService;
  * @author Dakota Chatt
  * @version July 20, 2022
  */
-public class ItemsDB {
+public class ItemDB {
     
     public List<Item> getAll() throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();

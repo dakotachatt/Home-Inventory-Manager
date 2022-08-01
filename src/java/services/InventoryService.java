@@ -1,7 +1,7 @@
 package services;
 
-import dataaccess.CategoriesDB;
-import dataaccess.ItemsDB;
+import dataaccess.CategoryDB;
+import dataaccess.ItemDB;
 import dataaccess.UserDB;
 import java.util.List;
 import models.Category;
@@ -17,25 +17,25 @@ import exceptions.*;
 public class InventoryService {
     
     public List<Category> getAllCategories() throws Exception {
-        CategoriesDB catDB = new CategoriesDB();
+        CategoryDB catDB = new CategoryDB();
         List<Category> categories = catDB.getAll();
         return categories;
     }
     
     public Category getCategory(int categoryId) throws Exception {
-        CategoriesDB catDB = new CategoriesDB();
+        CategoryDB catDB = new CategoryDB();
         Category category = catDB.getCategory(categoryId);
         return category;
     }
     
     public List<Item> getAllItems() throws Exception {
-        ItemsDB itemsDB = new ItemsDB();
+        ItemDB itemsDB = new ItemDB();
         List<Item> items = itemsDB.getAll();
         return items;
     }
     
     public List<Item> getAllUserItems(String username) throws Exception {
-        ItemsDB itemsDB = new ItemsDB();
+        ItemDB itemsDB = new ItemDB();
         UserService us = new UserService();
         User user = us.getUser(username);
         List<Item> items = itemsDB.getAllUserItems(user);
@@ -43,16 +43,16 @@ public class InventoryService {
     }
     
     public Item getItem(int itemId) throws Exception {
-        ItemsDB itemsDB = new ItemsDB();
+        ItemDB itemsDB = new ItemDB();
         Item item = itemsDB.getItem(itemId);
         return item;
     }
     
-    public void addItem(int categoryID, String itemName, double price, String username) throws Exception {
-            CategoriesDB catDB = new CategoriesDB();
-            ItemsDB itemsDB = new ItemsDB();
+    public void addItem(int categoryID, String itemName, double price, String email) throws Exception {
+            CategoryDB catDB = new CategoryDB();
+            ItemDB itemsDB = new ItemDB();
             UserDB userDB = new UserDB();
-            User user = userDB.getUser(username);
+            User user = userDB.getUser(email);
             Category category = catDB.getCategory(categoryID);
 
             Item item = new Item(); //ItemID is auto generated after being inserted into Items table
@@ -65,7 +65,7 @@ public class InventoryService {
     }
     
     public boolean deleteItem(int itemId, String loggedInUsername) throws Exception {
-        ItemsDB itemsDB = new ItemsDB();
+        ItemDB itemsDB = new ItemDB();
         Item item = itemsDB.getItem(itemId);
         
         if(item.getOwner().getEmail().equals(loggedInUsername)) {
