@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Category;
+import models.Item;
 import models.Role;
 import models.User;
 import services.RoleService;
@@ -39,6 +41,16 @@ public class AdminServlet extends HttpServlet {
             
             List<Role> roles = rs.getAll();
             request.setAttribute("roles", roles);
+            
+            //To be deleted after check
+            Role regRole = rs.getRole(2);
+            List<User> regUsers = regRole.getUserList();
+            request.setAttribute("regUsers", regUsers);
+            
+            
+            regRole = rs.getRole(1);
+            List<User> sysAdUsers = regRole.getUserList();
+            request.setAttribute("sysAdUsers", sysAdUsers);
             
             if(managedEmail != null && action != null) { 
                 request.setAttribute("userSelected", managedEmail); // Used as check to show or hide add/edit user forms

@@ -66,7 +66,12 @@ table td {
     position: relative;
     display: inline-block;
     width: 35%;
+}
 
+.update-form {
+    position: relative;
+    display: inline-block;
+    width: 35%;
 }
 
 .text-field {
@@ -99,4 +104,10 @@ select {
     background: #C9CACC;
     color: #000000;
     font-weight: 500;
+}
+
+.update-form {
+    position: relative;
+    display: inline-block;
+    width: 35%;
 }

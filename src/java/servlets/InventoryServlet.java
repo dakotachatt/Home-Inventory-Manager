@@ -1,5 +1,6 @@
 package servlets;
 
+import exceptions.MissingInputsException;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -94,25 +95,41 @@ public class InventoryServlet extends HttpServlet {
                     String itemName = request.getParameter("newItemName").toLowerCase();
                     String priceInput = request.getParameter("newPrice");
                     
+                    if(categoryString != null && !categoryString.equals("") && itemName != null && !itemName.equals("") && priceInput != null && !priceInput.equals("")) {
                     int categoryId = Integer.parseInt(categoryString);
                     double price = Double.parseDouble(priceInput);
                     is.addItem(categoryId, itemName, price, email);
                     
                     String message = "Item has been added";
                     session.setAttribute("message", message);
+                    } else { //displays message if user goes into developer tools and removes client side validation
+                        String message = "All fields must be filled in";
+                        session.setAttribute("message", message);
+            
+                        response.sendRedirect("inventory");
+                        return;
+                    } 
                 } else if (action.toLowerCase().equals("edit")) {
                     String categoryString = request.getParameter("editCategory");
                     String itemName = request.getParameter("editItemName").toLowerCase();
                     String priceInput = request.getParameter("editPrice");
                     
-                    int itemId = Integer.parseInt(itemIdString);
-                    int categoryId = Integer.parseInt(categoryString);
-                    double price = Double.parseDouble(priceInput);
-                    
-                    is.updateItem(itemId, categoryId, itemName, price, email);
-                    
-                    String message = "Item has been updated";
-                    session.setAttribute("message", message);   
+                    if(categoryString != null && !categoryString.equals("") && itemName != null && !itemName.equals("") && priceInput != null && !priceInput.equals("")) {
+                        int itemId = Integer.parseInt(itemIdString);
+                        int categoryId = Integer.parseInt(categoryString);
+                        double price = Double.parseDouble(priceInput);
+
+                        is.updateItem(itemId, categoryId, itemName, price, email);
+
+                        String message = "Item has been updated";
+                        session.setAttribute("message", message); 
+                    } else {
+                        String message = "All fields must be filled in";
+                        session.setAttribute("message", message);
+            
+                        response.sendRedirect("inventory");
+                        return;
+                    }  
                 }
             }
         } catch (NumberFormatException e) {

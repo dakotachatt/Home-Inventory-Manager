@@ -68,7 +68,7 @@ public class ItemService {
     public boolean updateItem(int itemId, int categoryId, String itemName, double itemPrice, String loggedInEmail) throws Exception {
         ItemDB itemDB = new ItemDB();
         CategoryDB categoryDB = new CategoryDB();
-
+        
         Item item = itemDB.getItem(itemId);
         Category prevCategory = item.getCategory();
         Category category = categoryDB.getCategory(categoryId);

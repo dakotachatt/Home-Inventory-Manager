@@ -102,7 +102,7 @@
             </c:if>
             
             <c:if test="${itemSelected != null}">
-                <div class="update-form">
+                <div class="add-form">
                     <h3>Edit Item: ${editItem.itemName}</h3>
                     <form action="" method="post">
                         <select class="form-input" name="editCategory" required>
@@ -123,5 +123,6 @@
                     </form>
                 </div>
             </c:if>
+        </div>
     </body>
 </html>

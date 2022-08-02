@@ -6,9 +6,6 @@ import javax.persistence.EntityTransaction;
 import models.Category;
 import models.Item;
 import models.User;
-import services.CategoryService;
-import services.ItemService;
-import services.UserService;
 
 /**
  *
@@ -101,21 +98,22 @@ public class ItemDB {
         EntityTransaction trans = em.getTransaction();
         
         try {
-            Category category = item.getCategory();
-            
-            trans.begin();
             //If category changed, will remove item from old category, and add to new category
+            Category category = item.getCategory();
             if(item.getCategory() != prevCategory) {
-                prevCategory.getItemList().remove(em.merge(item));
+                prevCategory.getItemList().remove(item);
                 category.getItemList().add(item);
             }
+            
+            trans.begin();
             em.merge(item);
+            em.merge(prevCategory);
             em.merge(category);
             trans.commit();
         } catch (Exception e) {
             trans.rollback();
         } finally {
             em.close();
-        }
+        } 
     }
 }

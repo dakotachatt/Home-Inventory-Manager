@@ -135,5 +135,19 @@
                 </div>
             </c:if>
         </div>
+        
+                <ul>
+                    <c:forEach var="user" items="${regUsers}">
+                        <li>${user.email}</li>
+                    </c:forEach>
+                </ul>
+                
+        <br>
+        <br>
+                <ul>
+                    <c:forEach var="user" items="${sysAdUsers}">
+                        <li>${user.email}</li>
+                    </c:forEach>
+                </ul>
     </body>
 </html>
