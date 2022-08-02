@@ -8,7 +8,9 @@ package dataaccess;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import models.Role;
 import models.User;
+import services.RoleService;
 
 /**
  *
@@ -43,8 +45,12 @@ public class UserDB {
         EntityTransaction trans = em.getTransaction();
         
         try {
+            Role role = user.getRole();
+            role.getUserList().add(user);
+            
             trans.begin();
             em.persist(user);
+            em.merge(role);
             trans.commit();
         } catch(Exception e) {
             trans.rollback();
@@ -58,8 +64,12 @@ public class UserDB {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
         
-        try { 
+        try {
+            Role role = user.getRole();
+            role.getUserList().remove(user);
+            
             trans.begin();
+            em.merge(role);
             em.remove(em.merge(user)); // Due to CascadeType.All relationship with Items, all items belonging to user will be deleted also
             trans.commit();
         } catch (Exception e) {
@@ -70,13 +80,21 @@ public class UserDB {
         }
     }
     
-    public void updateUser(User user) throws Exception {
+    public void updateUser(User user, Role prevRole) throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
         
         try {
+            //If role changed, ensures user is removed from old role userList, and added to new role userList
+            Role role = user.getRole();
+            if(!prevRole.equals(user.getRole())) {
+                prevRole.getUserList().remove(em.merge(user));
+                role.getUserList().add(user);
+            }
+            
             trans.begin();
             em.merge(user);
+            em.merge(role);
             trans.commit();
         } catch (Exception e) {
             trans.rollback();

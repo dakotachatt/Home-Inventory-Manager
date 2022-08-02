@@ -53,13 +53,14 @@ public class UserService {
             UserDB userDB = new UserDB();
             RoleDB roleDB = new RoleDB();
             User user = userDB.getUser(email);
+            Role prevRole = user.getRole();
             Role role = roleDB.getRole(roleID);
             user.setPassword(password);
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setActive(active);
             user.setRole(role);
-            userDB.updateUser(user);   
+            userDB.updateUser(user, prevRole);   
         } else {
             throw new MissingInputsException();
         }

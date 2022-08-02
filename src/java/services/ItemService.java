@@ -14,19 +14,7 @@ import exceptions.*;
  * @author Dakota Chatt
  * @version July 20, 2022
  */
-public class InventoryService {
-    
-    public List<Category> getAllCategories() throws Exception {
-        CategoryDB catDB = new CategoryDB();
-        List<Category> categories = catDB.getAll();
-        return categories;
-    }
-    
-    public Category getCategory(int categoryId) throws Exception {
-        CategoryDB catDB = new CategoryDB();
-        Category category = catDB.getCategory(categoryId);
-        return category;
-    }
+public class ItemService {
     
     public List<Item> getAllItems() throws Exception {
         ItemDB itemsDB = new ItemDB();
@@ -64,15 +52,35 @@ public class InventoryService {
             itemsDB.addItem(item);
     }
     
-    public boolean deleteItem(int itemId, String loggedInUsername) throws Exception {
+    public boolean deleteItem(int itemId, String loggedInEmail) throws Exception {
         ItemDB itemsDB = new ItemDB();
         Item item = itemsDB.getItem(itemId);
         
-        if(item.getOwner().getEmail().equals(loggedInUsername)) {
+        if(item.getOwner().getEmail().equals(loggedInEmail)) {
             itemsDB.deleteItem(item);            
             return true;
         } else {
             System.out.println("Cannot delete another user's items");
+            return false;
+        }
+    }
+    
+    public boolean updateItem(int itemId, int categoryId, String itemName, double itemPrice, String loggedInEmail) throws Exception {
+        ItemDB itemDB = new ItemDB();
+        CategoryDB categoryDB = new CategoryDB();
+
+        Item item = itemDB.getItem(itemId);
+        Category prevCategory = item.getCategory();
+        Category category = categoryDB.getCategory(categoryId);
+        item.setCategory(category);
+        item.setItemName(itemName);
+        item.setPrice(itemPrice);
+        
+        if(item.getOwner().getEmail().equals(loggedInEmail)) {
+            itemDB.updateItem(item, prevCategory);
+            return true;
+        } else {
+            System.out.println("Cannot edit another user's items");
             return false;
         }
     }

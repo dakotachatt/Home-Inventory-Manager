@@ -6,7 +6,8 @@ import javax.persistence.EntityTransaction;
 import models.Category;
 import models.Item;
 import models.User;
-import services.InventoryService;
+import services.CategoryService;
+import services.ItemService;
 import services.UserService;
 
 /**
@@ -89,6 +90,29 @@ public class ItemDB {
             trans.commit();
         } catch (Exception e) {
             System.out.println("Rolling back");
+            trans.rollback();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public void updateItem(Item item, Category prevCategory) throws Exception {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        
+        try {
+            Category category = item.getCategory();
+            
+            trans.begin();
+            //If category changed, will remove item from old category, and add to new category
+            if(item.getCategory() != prevCategory) {
+                prevCategory.getItemList().remove(em.merge(item));
+                category.getItemList().add(item);
+            }
+            em.merge(item);
+            em.merge(category);
+            trans.commit();
+        } catch (Exception e) {
             trans.rollback();
         } finally {
             em.close();

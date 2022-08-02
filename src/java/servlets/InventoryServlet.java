@@ -26,7 +26,8 @@ public class InventoryServlet extends HttpServlet {
         String action = request.getParameter("action");
         String itemIdString = request.getParameter("itemId");
         UserService us = new UserService();
-        InventoryService is = new InventoryService();
+        ItemService is = new ItemService();
+        CategoryService cs = new CategoryService();
         
         try{
             User user = us.getUser(email);
@@ -35,12 +36,14 @@ public class InventoryServlet extends HttpServlet {
             List<Item> items = user.getItemList();
             request.setAttribute("items", items);
             
-            List<Category> categories = is.getAllCategories();
+            List<Category> categories = cs.getAllCategories();
             request.setAttribute("categories", categories);
             
             if(action != null && itemIdString != null) {
-                if(action.equals("delete")) {
-                    int itemId = Integer.parseInt(itemIdString);
+                int itemId = Integer.parseInt(itemIdString);
+                request.setAttribute("itemSelected", itemId);
+                
+                if(action.toLowerCase().equals("delete")) {
                     boolean wasDeleted = is.deleteItem(itemId, email);
                     
                     if(wasDeleted) {
@@ -50,6 +53,15 @@ public class InventoryServlet extends HttpServlet {
                     
                     response.sendRedirect("inventory");
                     return;    
+                } else if (action.toLowerCase().equals("edit")) {
+                    
+                    Item item = is.getItem(itemId);
+                    request.setAttribute("editItem", item);
+                }
+            } else if (action != null) {
+                 if (action.toLowerCase().equals("cancel")) {
+                    response.sendRedirect("inventory");
+                    return;
                 }
             }
             
@@ -71,23 +83,36 @@ public class InventoryServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         String action = request.getParameter("action");
-        String categoryInput = request.getParameter("categories");
-        String itemName = request.getParameter("itemName").toLowerCase();
-        String priceInput = request.getParameter("price");
-        InventoryService is = new InventoryService();
+        String itemIdString = request.getParameter("itemId");
+        System.out.println(itemIdString);
+        ItemService is = new ItemService();
         
         try{
-            if(categoryInput == null || categoryInput.equals("") || itemName == null || itemName.equals("") || priceInput == null || priceInput.equals("")) {
-                String message = "Invalid. All fields must be filled.";
-                session.setAttribute("message", message);
-            } else if(action != null) {
-                if(action.equals("add")) {
-                    int categoryID = Integer.parseInt(categoryInput);
+            if(action != null) {
+                if(action.toLowerCase().equals("add")) {
+                    String categoryString = request.getParameter("newCategory");
+                    String itemName = request.getParameter("newItemName").toLowerCase();
+                    String priceInput = request.getParameter("newPrice");
+                    
+                    int categoryId = Integer.parseInt(categoryString);
                     double price = Double.parseDouble(priceInput);
-                    is.addItem(categoryID, itemName, price, email);
+                    is.addItem(categoryId, itemName, price, email);
                     
                     String message = "Item has been added";
                     session.setAttribute("message", message);
+                } else if (action.toLowerCase().equals("edit")) {
+                    String categoryString = request.getParameter("editCategory");
+                    String itemName = request.getParameter("editItemName").toLowerCase();
+                    String priceInput = request.getParameter("editPrice");
+                    
+                    int itemId = Integer.parseInt(itemIdString);
+                    int categoryId = Integer.parseInt(categoryString);
+                    double price = Double.parseDouble(priceInput);
+                    
+                    is.updateItem(itemId, categoryId, itemName, price, email);
+                    
+                    String message = "Item has been updated";
+                    session.setAttribute("message", message);   
                 }
             }
         } catch (NumberFormatException e) {

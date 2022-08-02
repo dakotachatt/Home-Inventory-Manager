@@ -47,6 +47,7 @@
                         <th>Name</th>
                         <th>Price</th>
                         <th>Delete</th>
+                        <th>Edit</th>
                     </tr>
 
                     <c:forEach var="item" items="${items}">
@@ -62,33 +63,65 @@
 
                                 <a class="btn btn-danger" role="button" href="${deleteURL}">Delete</a>
                             </td>
+                            <td>
+                                <c:url value="/inventory" var="editURL">
+                                    <c:param name="action" value="edit" />
+                                    <c:param name="itemId" value="${item.itemId}" />
+                                </c:url>
+
+                                <a class="btn btn-dark" role="button" href="${editURL}">Edit</a>
+                            </td>
                         </tr>
                     </c:forEach>
                 </table>        
             </div>
+        
+            <c:if test="${itemSelected == null}">
+                <div class="add-form">
+                    <h3>Add Item</h3>
+                    <form action="" method="post">
+                        <select class="form-input" name="newCategory" aria-label="Category Drop Down Menu" required>
+                            <c:forEach var="category" items="${categories}">
+                                <option value="${category.categoryId}">${category.categoryName}</option>
+                            </c:forEach>
+                        </select>
+                        <br>
+                        <input class="text-field form-input" type="text" name="newItemName" value="" aria-label="Item Name" placeholder="Item Name" required>
+                        <br>
+                        <input class="text-field form-input" type="text" name="newPrice" value="" aria-label="Item Price" placeholder="Price" required>
+                        <br>
+                        <input type="hidden" name="action" value="add">
+                        <input class="submit-button form-input" type="submit" value="Add" aria-label="New Item Submit Button">
+                    </form>
 
-            <div class="add-form">
-                <h3>Add Item</h3>
-                <form action="inventory" method="post">
-                    <select class="form-input" name="categories" aria-label="Category Drop Down Menu" required>
-                        <c:forEach var="category" items="${categories}">
-                            <option value="${category.categoryId}" aria-label="${category.categoryName}">${category.categoryName}</option>
-                        </c:forEach>
-                    </select>
-                    <br>
-                    <input class="text-field form-input" type="text" name="itemName" value="" aria-label="Item Name" placeholder="Item Name" required>
-                    <br>
-                    <input class="text-field form-input" type="text" name="price" value="" aria-label="Item Price" placeholder="Price" required>
-                    <br>
-                    <input type="hidden" name="action" value="add">
-                    <input class="submit-button form-input" type="submit" value="Add" aria-label="New Item Submit Button">
-                </form>
-
-                <!-- Displays error and success messages -->
-                <c:if test="${message != null}">
-                    <p>${message}</p>
-                </c:if>            
-            </div>        
-        </div>
+                    <!-- Displays error and success messages -->
+                    <c:if test="${message != null}">
+                        <p>${message}</p>
+                    </c:if>            
+                </div>
+            </c:if>
+            
+            <c:if test="${itemSelected != null}">
+                <div class="update-form">
+                    <h3>Edit Item: ${editItem.itemName}</h3>
+                    <form action="" method="post">
+                        <select class="form-input" name="editCategory" required>
+                            <c:forEach var="category" items="${categories}">
+                                <option value="${category.categoryId}" <c:if test="${editItem.category.categoryId == category.categoryId}">selected="selected"</c:if>>${category.categoryName}</option>
+                            </c:forEach>
+                        </select>
+                        <br>
+                        <input class="text-field form-input" type="text" name="editItemName" value="${editItem.itemName}" placeholder="Item Name" required>
+                        <br>
+                        <input class="text-field form-input" type="text" name="editPrice" value="${editItem.price}" placeholder="Price" required>
+                        <br>
+                        <input class="submit-button form-input" type="submit" name="action" value="Edit">
+                    </form>
+                    
+                    <form action="" method="get">
+                        <input class="submit-button cancel-button form-input" type="submit" name="action" value="Cancel">
+                    </form>
+                </div>
+            </c:if>
     </body>
 </html>
