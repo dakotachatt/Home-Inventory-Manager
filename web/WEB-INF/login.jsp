@@ -17,23 +17,34 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Home Inventory</a>
+            <a class="navbar-brand" href="#">Home nVentory</a>
         </nav>
         
-        <div class="content-container">
-            <form action="login" method="post">
-                <h2>Login</h2>
-                <input class="text-field form-input" type="text" name="email" value="" placeholder="Email Address">
-                <br>
-                <input class="text-field form-input" type="password" name="password" value="" placeholder="Password">
-                <br>
-                <input class="btn btn-primary" type="submit" value="Login">
+        <div>
+            <div class="row d-flex justify-content-center text-center">
+                <form class="col-6" action="login" method="post">
+                    <h2>Login</h2>
+                    <input class="form-control mb-2" type="text" name="email" value="" placeholder="Email Address">
+                    <input class="form-control mb-2" type="password" name="password" value="" placeholder="Password">
+                    <input class="btn btn-primary form-control mb-2" type="submit" value="Login">
 
-                <!-- Displays error message if login credentials are incorrect or missing -->
-                <c:if test="${message != null}">
-                    <p><i>${message}</i></p>
-                </c:if>
-            </form>
+                    <!-- Displays error message if login credentials are incorrect or missing -->
+                    <c:if test="${message != null}">
+                        <p class="text-center"><i>${message}</i></p>
+                    </c:if>
+                </form>
+            </div>
+            
+            <div class="row d-flex justify-content-center mt-3">
+                <hr class="col-4"/>
+            </div>
+            
+            <div class="row d-flex justify-content-center text-center">
+                <div class="col-6">
+                    <h5>New to Home nVentory?</h5>
+                    <a href="register"><button class="btn btn-outline-primary form-control sign-up-btn">Sign Up</button></a>
+                </div>
+            </div>
         </div>
     </body>
 </html>

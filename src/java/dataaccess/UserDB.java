@@ -88,12 +88,13 @@ public class UserDB {
             //If role changed, ensures user is removed from old role userList, and added to new role userList
             Role role = user.getRole();
             if(!prevRole.equals(user.getRole())) {
-                prevRole.getUserList().remove(em.merge(user));
+                prevRole.getUserList().remove(user);
                 role.getUserList().add(user);
             }
             
             trans.begin();
             em.merge(user);
+            em.merge(prevRole);
             em.merge(role);
             trans.commit();
         } catch (Exception e) {

@@ -17,7 +17,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Home Inventory</a>
+            <a class="navbar-brand" href="#">Home nVentory</a>
         
             <div class="navbar-item-container collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
