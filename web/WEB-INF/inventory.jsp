@@ -15,35 +15,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="./styles/inventory.css">
+        <link rel="stylesheet" type="text/css" href="./styles/navbarCustom.css">
         <title>Home Inventory | Add Inventory</title>
     </head>
     <body>
-       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Home nVentory</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button> 
-            <div class="navbar-item-container collapse navbar-collapse d-flex">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="inventory">Inventory</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="admin">Admin</a>
-                    </li>
-                </ul>
-                
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login?logout">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <%@ include file="./templates/navbar.jsp"%>
         
         <div class="row d-flex justify-content-center">
-                        <c:if test="${itemSelected == null}">
-                <div class="col-lg-4 col-10">
+            <c:if test="${itemSelected == null}">
+                <div class="col-xl-4 col-lg-4 col-10">
                     <h2>Add Item</h2>
                     <form action="" method="post">
                         <select class="form-select mb-2" name="newCategory" aria-label="Category Drop Down Menu" required>
@@ -66,7 +46,7 @@
             </c:if>
             
             <c:if test="${itemSelected != null}">
-                <div class="col-lg-4 col-10">
+                <div class="col-xl-4 col-lg-4 col-10">
                     <h2>Edit Item: ${editItem.itemName}</h2>
                     <form action="" method="post">
                         <select class="form-select mb-2" name="editCategory" required>
@@ -85,7 +65,7 @@
                 </div>
             </c:if>
             
-            <div class="col-lg-6 col-10 text-center">
+            <div class="col-xl-6 col-lg-8 col-10 text-center">
                 <h2>Inventory for ${user.firstName} ${user.lastName}</h2>
                 <table class="table table-striped table-bordered table-hover">
                     <thead class="table-dark">

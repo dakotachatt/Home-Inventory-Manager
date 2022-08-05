@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Category;
-import models.Item;
 import models.Role;
 import models.User;
 import services.RoleService;
@@ -20,7 +18,7 @@ import services.UserService;
  * @author Dakota Chatt
  * @version June 21, 2022
  */
-public class AdminServlet extends HttpServlet {
+public class ManageUserServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,7 +59,7 @@ public class AdminServlet extends HttpServlet {
                     String message = "User: " + managedEmail + " has been deleted";
                     session.setAttribute("message", message);
                     
-                    response.sendRedirect("admin");
+                    response.sendRedirect("manageUsers");
                     return;                    
                 } else if (action.toLowerCase().equals("edit")) { //Creates a user object when edit button is clicked in order to pre-fill edit user form
                     user = us.getUser(managedEmail);
@@ -69,16 +67,16 @@ public class AdminServlet extends HttpServlet {
                 }
             } else if (action != null) {
                  if (action.toLowerCase().equals("cancel")) {
-                    response.sendRedirect("admin");
+                    response.sendRedirect("manageUsers");
                     return;
                 }
             }
             
-        } catch (DeleteOwnAccountException e) {
+        } catch (OwnAccountException e) {
             String message = "Cannot delete your own account";
             session.setAttribute("message", message);
             
-            response.sendRedirect("admin");
+            response.sendRedirect("manageUsers");
             return;  
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +86,7 @@ public class AdminServlet extends HttpServlet {
             session.setAttribute("message", message);
         }
         
-        getServletContext().getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/WEB-INF/manageUsers.jsp").forward(request, response);
         session.setAttribute("message", null);
         return;
     }
@@ -99,6 +97,7 @@ public class AdminServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
+        String loggedInEmail = (String) session.getAttribute("email");
         String managedEmail = request.getParameter("email");
         UserService us = new UserService();
         
@@ -110,12 +109,19 @@ public class AdminServlet extends HttpServlet {
                     String lastName = request.getParameter("newLName");
                     String password = request.getParameter("newPassword");
 
-                    us.addUser(email, firstName, lastName,  password);
-
+                    if(us.getUser(email) == null) {
+                        us.addUser(email, firstName, lastName,  password);
+                    }  else {
+                        String message = "Email is already in use, please choose another";
+                        session.setAttribute("message", message);
+                        
+                        getServletContext().getRequestDispatcher("/WEB-INF/manageUsers.jsp").forward(request, response);
+                        return;
+                    }
                     String message = "User: " + email + " has been added";
                     session.setAttribute("message", message);
 
-                    response.sendRedirect("admin");
+                    response.sendRedirect("manageUsers");
                     return;
                 } else if (action.toLowerCase().equals("edit")) {
                     String email = managedEmail;
@@ -128,20 +134,27 @@ public class AdminServlet extends HttpServlet {
                         isActive = true;
                     }
                     
-                    us.updateUser(email, password, firstName, lastName, isActive, roleId);
+                    //LoggedInEmail is used in UserService to ensure logged in Admin cannot change their own role
+                    us.updateUser(loggedInEmail, email, password, firstName, lastName, isActive, roleId);
                     
                     String message = "User: " + managedEmail + " has been updated";
                     session.setAttribute("message", message);   
                     
-                    response.sendRedirect("admin");
+                    response.sendRedirect("manageUsers");
                     return;
                 } 
             }
+        } catch (OwnAccountException e) {
+            String message = "Cannot change your own role permissions";
+            session.setAttribute("message", message);
+            
+            response.sendRedirect("manageUsers");
+            return;  
         } catch (MissingInputsException e) {
             String message = "All fields must be filled in";
             session.setAttribute("message", message);
             
-            response.sendRedirect("admin");
+            response.sendRedirect("manageUsers");
             return;  
         } catch (Exception e) {
             e.printStackTrace();

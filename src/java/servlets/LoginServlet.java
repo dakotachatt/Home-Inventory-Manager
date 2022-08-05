@@ -24,9 +24,11 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
+        String email = (String) session.getAttribute("email");
+        session.setAttribute("message", null);
         UserService us = new UserService();
         User user = null;
+        
         
         //Logging user out
         if(request.getParameter("logout") != null) {
@@ -39,19 +41,18 @@ public class LoginServlet extends HttpServlet {
         }
         
         try {
-            if (username != null) {
-            user = us.getUser(username);
+            if (email != null) {
+                user = us.getUser(email);
             }
         
         } catch (Exception e) {
             System.out.println("Error");
         }
 
-        
         //If logged in session exists, redirect to applicable page
         if(user != null) { //If navigate manually to /login, and user session still active, redirect to /inventory
             if(user.getRole().getRoleId() == 1 || user.getRole().getRoleId() == 3) {
-                response.sendRedirect("admin");
+                response.sendRedirect("manageUsers");
                 return;
             } else {
                 response.sendRedirect("inventory");
@@ -81,9 +82,10 @@ public class LoginServlet extends HttpServlet {
             
         } else if(user != null) { //If login successful, redirect to inventory or admin page
             session.setAttribute("email", user.getEmail());
+            session.setAttribute("loggedInRole", user.getRole().getRoleId());
 
             if(user.getRole().getRoleId() == 1 || user.getRole().getRoleId() == 3) {
-                response.sendRedirect("admin");
+                response.sendRedirect("manageUsers");
                 return;
             } else {
                 response.sendRedirect("inventory");

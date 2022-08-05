@@ -136,7 +136,7 @@ public class InventoryServlet extends HttpServlet {
             String message = "Price must be a number of the format ##.##, decimal points are optional";
             session.setAttribute("message", message);
             
-            response.sendRedirect("admin");
+            response.sendRedirect("manageUsers");
             return;
         } catch (Exception e) {
             e.printStackTrace();

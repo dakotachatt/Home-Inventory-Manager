@@ -14,15 +14,19 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
-        <servlet-name>AdminServlet</servlet-name>
+        <servlet-name>AccountServlet</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <servlet-name>ManageUserServlet</servlet-name>
     </filter-mapping>
     <filter-mapping>
         <filter-name>AdminFilter</filter-name>
-        <servlet-name>AdminServlet</servlet-name>
+        <servlet-name>ManageUserServlet</servlet-name>
     </filter-mapping>
     <servlet>
-        <servlet-name>AdminServlet</servlet-name>
-        <servlet-class>servlets.AdminServlet</servlet-class>
+        <servlet-name>ManageUserServlet</servlet-name>
+        <servlet-class>servlets.ManageUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>InventoryServlet</servlet-name>
@@ -36,9 +40,13 @@
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>servlets.RegisterServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AccountServlet</servlet-name>
+        <servlet-class>servlets.AccountServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>AdminServlet</servlet-name>
-        <url-pattern>/admin</url-pattern>
+        <servlet-name>ManageUserServlet</servlet-name>
+        <url-pattern>/manageUsers</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>InventoryServlet</servlet-name>
@@ -51,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccountServlet</servlet-name>
+        <url-pattern>/account</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

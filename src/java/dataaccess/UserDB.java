@@ -94,8 +94,28 @@ public class UserDB {
             
             trans.begin();
             em.merge(user);
-            em.merge(prevRole);
-            em.merge(role);
+            
+            if(!prevRole.equals(user.getRole())) {
+                em.merge(prevRole);
+                em.merge(role);   
+            }
+            
+            trans.commit();
+        } catch (Exception e) {
+            trans.rollback();
+            System.out.println("Error updating user");            
+        } finally {
+            em.close();
+        }
+    }
+    
+    public void deactivateUser(User user) throws Exception {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        
+        try {
+            trans.begin();
+            em.merge(user);
             trans.commit();
         } catch (Exception e) {
             trans.rollback();
