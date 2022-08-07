@@ -20,7 +20,7 @@
         <filter-name>AuthenticationFilter</filter-name>
         <servlet-name>ManageUserServlet</servlet-name>
     </filter-mapping>
-        <filter-mapping>
+    <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
         <servlet-name>ManageCategoryServlet</servlet-name>
     </filter-mapping>
@@ -28,7 +28,7 @@
         <filter-name>AdminFilter</filter-name>
         <servlet-name>ManageUserServlet</servlet-name>
     </filter-mapping>
-        <filter-mapping>
+    <filter-mapping>
         <filter-name>AdminFilter</filter-name>
         <servlet-name>ManageCategoryServlet</servlet-name>
     </filter-mapping>

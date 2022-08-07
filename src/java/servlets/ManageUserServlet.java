@@ -159,7 +159,7 @@ public class ManageUserServlet extends HttpServlet {
             return;  
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Issue with the Admin page doPost");
+            System.out.println("Issue with the Manage Users page doPost");
             
             String message = "An error has ocurred, please try again";
             session.setAttribute("message", message);

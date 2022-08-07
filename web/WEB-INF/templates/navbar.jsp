@@ -15,9 +15,11 @@
                     <li class="nav-item">
                         <a class="nav-link <c:if test='${currentPage.equals("manageUsers")}'>active</c:if>" href="manageUsers">Manage Users</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link <c:if test='${currentPage.equals("manageCategories")}'>active</c:if>" href="manageCategories">Manage Categories</a>
-                    </li>
+                    <c:if test="${loggedInRole == 1}">
+                        <li class="nav-item">
+                            <a class="nav-link <c:if test='${currentPage.equals("manageCategories")}'>active</c:if>" href="manageCategories">Manage Categories</a>
+                        </li>
+                    </c:if>
                 </c:if>
             </ul>
 

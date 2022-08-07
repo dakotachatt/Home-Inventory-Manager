@@ -25,7 +25,7 @@
                 <div class="col-xl-3 col-lg-6 col-md-6 col-10">
                     <form action="" method="post">
                         <h2>Add Category</h2>
-                        <input class="form-control mb-2" type="text" name="newCategory" value="" placeholder="Category Name" required>
+                        <input class="form-control mb-2" type="text" name="newCategoryName" value="" placeholder="Category Name" required>
                         <input type="hidden" name="action" value="add">
                         <input class="btn btn-primary form-control mb-2" type="submit" value="Save">
 
@@ -40,7 +40,7 @@
                 <div class="col-xl-3 col-lg-6 col-md-6 col-10">
                     <form action="" method="post">
                         <h2>Edit Category</h2>
-                        <input class="form-control mb-2" type="text" name="editCategory" value="${editCategory.categoryName}" placeholder="Category Name" required>
+                        <input class="form-control mb-2" type="text" name="editCategoryName" value="${editCategory.categoryName}" placeholder="Category Name" required>
                         <input type="hidden" name="action" value="edit">
                         <input class="btn btn-primary form-control mb-2" type="submit" value="Edit">
 
