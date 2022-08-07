@@ -40,6 +40,7 @@ public class AccountServlet extends HttpServlet {
                     
                     us.deactivateUser(email);
                 
+                    session.invalidate();
                     String message = "Your account has been successfully deactivated";
                     request.setAttribute("message", message);
 

@@ -38,19 +38,19 @@ public class RegisterServlet extends HttpServlet {
             if(action != null) {
                 if(action.equals("add")) {
                     
-                    String email = request.getParameter("newEmail");
-                    String firstName = request.getParameter("newFName");
-                    String lastName = request.getParameter("newLName");
-                    String password = request.getParameter("newPassword");
+                    String newEmail = request.getParameter("newEmail");
+                    String newFirstName = request.getParameter("newFName");
+                    String newLastName = request.getParameter("newLName");
+                    String newPassword = request.getParameter("newPassword");
                     
-                    request.setAttribute("email", email);
-                    request.setAttribute("firstName", firstName);
-                    request.setAttribute("lastName", lastName);
+                    request.setAttribute("newEmail", newEmail);
+                    request.setAttribute("newFirstName", newFirstName);
+                    request.setAttribute("newLastName", newLastName);
                     
-                    if(us.getUser(email) == null) {
-                        us.addUser(email, firstName, lastName,  password);
+                    if(us.getUser(newEmail) == null) {
+                        us.addUser(newEmail, newFirstName, newLastName,  newPassword);
                         
-                        getServletContext().getRequestDispatcher("/WEB-INF/registerConfirmation.html").forward(request, response);
+                        getServletContext().getRequestDispatcher("/WEB-INF/registerConfirmation.jsp").forward(request, response);
                         return;
                     } else {
                         String message = "Email is already in use, please choose another";

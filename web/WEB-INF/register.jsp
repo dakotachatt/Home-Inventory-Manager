@@ -24,9 +24,9 @@
             <div class="col-lg-5 col-md-8 col-10 border rounded shadow p-3 row d-flex justify-content-center text-center">
                 <form class="col-lg-8 col-md-10 col-12" action="" method="post">
                     <h2>Create Account</h2>
-                    <input class="form-control mb-2" type="text" name="newFName" value="${firstName}" placeholder="First Name" required>
-                    <input class="form-control mb-2" type="text" name="newLName" value="${lastName}" placeholder="Last Name" required>
-                    <input class="form-control mb-2" type="email" name="newEmail" value="${email}" placeholder="Email Address" required>
+                    <input class="form-control mb-2" type="text" name="newFName" value="${newFirstName}" placeholder="First Name" required>
+                    <input class="form-control mb-2" type="text" name="newLName" value="${newLastName}" placeholder="Last Name" required>
+                    <input class="form-control mb-2" type="email" name="newEmail" value="${newEmail}" placeholder="Email Address" required>
                     <input class="form-control mb-2" type="password" name="newPassword" value="" placeholder="Password" required>
                     <input type="hidden" name="action" value="add">
                     <input class="btn btn-primary form-control mb-2" type="submit" value="Create Account">

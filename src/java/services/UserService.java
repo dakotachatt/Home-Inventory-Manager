@@ -39,9 +39,10 @@ public class UserService {
     }
     
     public void deleteUser(String loggedInEmail, String emailToDelete) throws Exception {
-        if(!loggedInEmail.equals(emailToDelete)) { // Ensures the admin cannot delete their own account
             UserDB userDB = new UserDB();
             User user = userDB.getUser(emailToDelete);
+            
+        if(!loggedInEmail.equals(emailToDelete)) { // Ensures the admin cannot delete their own account
             userDB.deleteUser(user);
         } else {
             throw new OwnAccountException();

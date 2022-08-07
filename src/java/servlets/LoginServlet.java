@@ -84,7 +84,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("email", user.getEmail());
             session.setAttribute("loggedInRole", user.getRole().getRoleId());
 
-            if(user.getRole().getRoleId() == 1) {
+            if(user.getRole().getRoleId() == 1 || user.getRole().getRoleId() == 3) {
                 response.sendRedirect("manageUsers");
                 return;
             } else {
