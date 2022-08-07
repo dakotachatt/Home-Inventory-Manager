@@ -25,6 +25,7 @@ public class InventoryServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         String action = request.getParameter("action");
+        request.setAttribute("currentPage", "inventory"); //To determine which navbar option to highlight as active
         String itemIdString = request.getParameter("itemId");
         UserService us = new UserService();
         ItemService is = new ItemService();
@@ -37,7 +38,7 @@ public class InventoryServlet extends HttpServlet {
             List<Item> items = user.getItemList();
             request.setAttribute("items", items);
             
-            List<Category> categories = cs.getAllCategories();
+            List<Category> categories = cs.getAll();
             request.setAttribute("categories", categories);
             
             if(action != null && itemIdString != null) {

@@ -9,7 +9,7 @@ import models.Category;
  * @author Dakota
  */
 public class CategoryService {
-        public List<Category> getAllCategories() throws Exception {
+        public List<Category> getAll() throws Exception {
         CategoryDB catDB = new CategoryDB();
         List<Category> categories = catDB.getAll();
         return categories;

@@ -1,0 +1,10 @@
+@media only screen and (max-device-width: 992px) {
+    table tr td, thead {
+        font-size: 12px;
+    }
+    
+    .btn {
+        font-size: 12px !important;
+    }
+}
+

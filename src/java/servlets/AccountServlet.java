@@ -25,6 +25,7 @@ public class AccountServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         String action = request.getParameter("action");
+        request.setAttribute("currentPage", "account"); //To determine which navbar option to highlight as active
         UserService us = new UserService();
         
         try {

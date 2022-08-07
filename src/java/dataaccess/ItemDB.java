@@ -107,8 +107,12 @@ public class ItemDB {
             
             trans.begin();
             em.merge(item);
-            em.merge(prevCategory);
-            em.merge(category);
+            
+            if(!prevCategory.equals(item.getCategory())) {
+                em.merge(prevCategory);
+                em.merge(category);   
+            }
+            
             trans.commit();
         } catch (Exception e) {
             trans.rollback();

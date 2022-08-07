@@ -28,6 +28,7 @@ public class ManageUserServlet extends HttpServlet {
         String email = (String) session.getAttribute("email");
         String managedEmail = request.getParameter("email");
         String action = request.getParameter("action");
+        request.setAttribute("currentPage", "manageUsers"); //To determine which navbar option to highlight as active
         UserService us = new UserService();
         RoleService rs = new RoleService();
         User user = null;
@@ -45,7 +46,7 @@ public class ManageUserServlet extends HttpServlet {
             List<User> regUsers = regRole.getUserList();
             request.setAttribute("regUsers", regUsers);
             
-            
+            //Delete after check
             regRole = rs.getRole(1);
             List<User> sysAdUsers = regRole.getUserList();
             request.setAttribute("sysAdUsers", sysAdUsers);
