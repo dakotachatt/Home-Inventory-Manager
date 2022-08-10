@@ -8,8 +8,10 @@ package dataaccess;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import models.Company;
 import models.Role;
 import models.User;
+import services.CompanyService;
 import services.RoleService;
 
 /**
@@ -23,6 +25,18 @@ public class UserDB {
         
         try {
             List<User> users = em.createNamedQuery("User.findAll", User.class).getResultList();
+            return users;
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<User> getAllCompany(int companyId) throws Exception {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        
+        try {
+            CompanyService cs = new CompanyService();
+            List<User> users = cs.getCompany(companyId).getUserList();
             return users;
         } finally {
             em.close();
@@ -46,11 +60,14 @@ public class UserDB {
         
         try {
             Role role = user.getRole();
+            Company company = user.getCompany();
             role.getUserList().add(user);
+            company.getUserList().add(user);
             
             trans.begin();
             em.persist(user);
             em.merge(role);
+            em.merge(company);
             trans.commit();
         } catch(Exception e) {
             trans.rollback();
@@ -67,10 +84,13 @@ public class UserDB {
         try {
             Role role = user.getRole();
             role.getUserList().remove(user);
+            Company company = user.getCompany();
+            company.getUserList().remove(user);
             
             trans.begin();
-            em.merge(role);
             em.remove(em.merge(user)); // Due to CascadeType.All relationship with Items, all items belonging to user will be deleted also
+            em.merge(role);
+            em.merge(company);
             trans.commit();
         } catch (Exception e) {
             trans.rollback();
@@ -80,7 +100,7 @@ public class UserDB {
         }
     }
     
-    public void updateUser(User user, Role prevRole) throws Exception {
+    public void adminUpdateUser(User user, Role prevRole, Company prevCompany) throws Exception {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
         
@@ -92,6 +112,12 @@ public class UserDB {
                 role.getUserList().add(user);
             }
             
+            Company company = user.getCompany();
+            if(!prevCompany.equals(user.getCompany())) {
+                prevCompany.getUserList().remove(user);
+                company.getUserList().add(user);
+            }
+            
             trans.begin();
             em.merge(user);
             
@@ -100,10 +126,30 @@ public class UserDB {
                 em.merge(role);   
             }
             
+            if(!prevCompany.equals(user.getCompany())) {
+                em.merge(prevCompany);
+                em.merge(company);   
+            }
+            
             trans.commit();
         } catch (Exception e) {
             trans.rollback();
             System.out.println("Error updating user");            
+        } finally {
+            em.close();
+        }
+    }
+    
+    public void userUpdate(User user) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        
+        try {
+            trans.begin();
+            em.merge(user);
+            trans.commit();
+        } catch (Exception e) {
+            trans.rollback();
         } finally {
             em.close();
         }

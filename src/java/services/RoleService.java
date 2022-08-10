@@ -16,6 +16,12 @@ public class RoleService {
         return roles;
     }
     
+    public List<Role> getAllCompany() {
+        RoleDB roleDB = new RoleDB();
+        List<Role> roles = roleDB.getAllCompany();
+        return roles;
+    }
+    
     public Role getRole(int roleID) {
         RoleDB roleDB = new RoleDB();
         Role role = roleDB.getRole(roleID);

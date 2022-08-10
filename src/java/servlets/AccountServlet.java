@@ -70,15 +70,11 @@ public class AccountServlet extends HttpServlet {
         try {
             if(action != null) {
                 if (action.toLowerCase().equals("edit")) {
-                    User user = us.getUser(email);
-
                     String password = request.getParameter("editPassword");
                     String firstName = request.getParameter("editFName");
                     String lastName = request.getParameter("editLName");
-                    boolean isActive = user.getActive();
                     
-                    //Note in this case, the logged in email and email of account to be updated is the same as this is the user's page
-                    us.updateUser(email, email, password, firstName, lastName, isActive, user.getRole().getRoleId());
+                    us.userUpdate(email, password, firstName, lastName);
                     
                     String message = "Your account information has been updated";
                     session.setAttribute("message", message);   

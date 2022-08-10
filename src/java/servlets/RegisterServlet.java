@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.User;
 import services.UserService;
 
 /**
@@ -20,6 +21,29 @@ public class RegisterServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
+        UserService us = new UserService();
+        User user = null;
+        
+        try {
+            if (email != null) {
+                user = us.getUser(email);
+            }
+        
+        } catch (Exception e) {
+            System.out.println("Error");
+        }
+
+        //If logged in session exists, redirect to applicable page
+        if(user != null) { //If navigate manually to /login, and user session still active, redirect to /inventory
+            if(user.getRole().getRoleId() == 1 || user.getRole().getRoleId() == 3) {
+                response.sendRedirect("manageUsers");
+                return;
+            } else {
+                response.sendRedirect("inventory");
+                return;
+            }
+        }
         
         getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
         session.setAttribute("message", null);
@@ -48,7 +72,7 @@ public class RegisterServlet extends HttpServlet {
                     request.setAttribute("newLastName", newLastName);
                     
                     if(us.getUser(newEmail) == null) {
-                        us.addUser(newEmail, newFirstName, newLastName,  newPassword);
+                        us.userAdd(newEmail, newFirstName, newLastName,  newPassword);
                         
                         getServletContext().getRequestDispatcher("/WEB-INF/registerConfirmation.jsp").forward(request, response);
                         return;

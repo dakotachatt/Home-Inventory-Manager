@@ -57,6 +57,9 @@ public class User implements Serializable {
     private String password;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Item> itemList;
+    @JoinColumn(name = "company", referencedColumnName = "company_id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Company company;
     @JoinColumn(name = "role", referencedColumnName = "role_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Role role;
@@ -123,6 +126,14 @@ public class User implements Serializable {
 
     public void setItemList(List<Item> itemList) {
         this.itemList = itemList;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Role getRole() {

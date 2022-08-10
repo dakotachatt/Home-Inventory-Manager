@@ -5,6 +5,7 @@
  */
 package dataaccess;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import models.Role;
@@ -20,6 +21,21 @@ public class RoleDB {
         
         try {
             List<Role> roles = em.createNamedQuery("Role.findAll", Role.class).getResultList();
+            return roles;
+        } finally {
+            em.close();
+        }
+    }
+    
+    //Only gets non system admin roles for the company admin to have access to
+    public List<Role> getAllCompany() {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        
+        try {
+            List<Role> roles = new ArrayList<>();
+            roles.add(this.getRole(2));
+            roles.add(this.getRole(3));
+            
             return roles;
         } finally {
             em.close();

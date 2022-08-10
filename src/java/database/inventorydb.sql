@@ -19,6 +19,14 @@ CREATE TABLE IF NOT EXISTS `inventorydb`.`role` (
   PRIMARY KEY (`role_id`));
 
 -- -----------------------------------------------------
+-- Table `inventorydb`.`company`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `inventorydb`.`company` (
+    `company_id` INT(11) NOT NULL,
+    `company_name` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`company_id`));
+
+-- -----------------------------------------------------
 -- Table `inventorydb`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `inventorydb`.`user` (
@@ -28,10 +36,14 @@ CREATE TABLE IF NOT EXISTS `inventorydb`.`user` (
   `last_name` VARCHAR(20) NOT NULL,
   `password` VARCHAR(20) NOT NULL,
   `role` INT(11) NOT NULL,
+  `company` INT(11) NOT NULL,  
   PRIMARY KEY (`email`),
   CONSTRAINT `fk_user_role`
     FOREIGN KEY (`role`)
-    REFERENCES `inventorydb`.`role` (`role_id`));
+    REFERENCES `inventorydb`.`role` (`role_id`),
+  CONSTRAINT `fk_user_company`
+    FOREIGN KEY (`company`)
+    REFERENCES `inventorydb`.`company` (`company_id`));
 
 
 -- -----------------------------------------------------
@@ -59,6 +71,11 @@ INSERT INTO `role` VALUES (1, 'system admin');
 INSERT INTO `role` VALUES (2, 'regular user');
 INSERT INTO `role` VALUES (3, 'company admin');
 
+INSERT INTO `company` VALUES (1, 'Home nVentory');
+INSERT INTO `company` VALUES (2, 'None'); -- Means affiliated with no company
+INSERT INTO `company` VALUES (3, 'Bikes and Stuff');
+INSERT INTO `company` VALUES (4, 'Fast Mart');
+
 INSERT INTO `category` (`category_name`) VALUES ('kitchen');
 INSERT INTO `category` (`category_name`) VALUES ('bathroom');
 INSERT INTO `category` (`category_name`) VALUES ('living room');
@@ -70,14 +87,20 @@ INSERT INTO `category` (`category_name`) VALUES ('utility room');
 INSERT INTO `category` (`category_name`) VALUES ('storage');
 INSERT INTO `category` (`category_name`) VALUES ('other');
 
-INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`)
-	VALUES ('cprg352+admin@gmail.com', true, 'Admin','Admin', 'password', 1);
-INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`)
-	VALUES ('cprg352+admin2@gmail.com', true, 'Admin2','Admin2', 'password', 3);
-INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`)
-	VALUES ('cprg352+anne@gmail.com', true, 'Anne','Annerson', 'password', 2);
-INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`)
-	VALUES ('cprg352+barb@gmail.com', true, 'Barb','Barber', 'password', 2);
+INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`, `company`)
+	VALUES ('cprg352+admin@gmail.com', true, 'Admin','Admin', 'password', 1, 1);
+INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`, `company`)
+	VALUES ('cprg352+admin2@gmail.com', true, 'Admin2','Admin2', 'password', 3, 3);
+INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`, `company`)
+	VALUES ('cprg352+admin3@gmail.com', true, 'Admin3','Admin3', 'password', 3, 4);
+INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`, `company`)
+	VALUES ('cprg352+anne@gmail.com', true, 'Anne','Annerson', 'password', 2, 1);
+INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`, `company`)
+	VALUES ('cprg352+barb@gmail.com', true, 'Barb','Barber', 'password', 2, 3);
+INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`, `company`)
+        VALUES ('cprg352+dave@gmail.com', true, 'Dave','Daveson', 'password', 2, 4);
+INSERT INTO `user` (`email`,`active`,`first_name`,`last_name`,`password`,`role`, `company`)
+        VALUES ('cprg352+alan@gmail.com', true, 'Alan','Alanson', 'password', 2, 2);
 
 INSERT INTO `item` (`category`,`item_name`,`price`,`owner`) VALUES (1, 'blender',29.99,'cprg352+anne@gmail.com');
 INSERT INTO `item` (`category`,`item_name`,`price`,`owner`) VALUES (1, 'toaster',19.99,'cprg352+anne@gmail.com');

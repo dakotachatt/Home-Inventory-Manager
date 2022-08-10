@@ -8,10 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Role;
-import models.User;
-import services.RoleService;
-import services.UserService;
+import models.*;
+import services.*;
 
 /**
  *
@@ -26,30 +24,34 @@ public class ManageUserServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
+        int loggedInRole = (Integer) session.getAttribute("loggedInRole");
         String managedEmail = request.getParameter("email");
         String action = request.getParameter("action");
         request.setAttribute("currentPage", "manageUsers"); //To determine which navbar option to highlight as active
         UserService us = new UserService();
         RoleService rs = new RoleService();
+        CompanyService cs = new CompanyService();
         User user = null;
         
         //Get all users to display in manage users table
         try {
-            List<User> users = us.getAll();
-            request.setAttribute("users", users);
+            //If user is a system admin, they have access to all users, company admins only have access to their own employees
+            if(loggedInRole == 1) {
+                List<User> users = us.getAll();
+                request.setAttribute("users", users);
             
-            List<Role> roles = rs.getAll();
-            request.setAttribute("roles", roles);
-            
-            //To be deleted after check
-            Role regRole = rs.getRole(2);
-            List<User> regUsers = regRole.getUserList();
-            request.setAttribute("regUsers", regUsers);
-            
-            //Delete after check
-            regRole = rs.getRole(1);
-            List<User> sysAdUsers = regRole.getUserList();
-            request.setAttribute("sysAdUsers", sysAdUsers);
+                List<Role> roles = rs.getAll();
+                request.setAttribute("roles", roles);
+                
+                List<Company> companies = cs.getAll();
+                request.setAttribute("companies", companies);
+            } else if (loggedInRole == 3) {
+                List<User> users = us.getAllCompany(us.getUser(email).getCompany().getCompanyId());
+                request.setAttribute("users", users);
+                
+                List<Role> roles = rs.getAllCompany();
+                request.setAttribute("roles", roles);
+            }
             
             if(managedEmail != null && action != null) { 
                 request.setAttribute("userSelected", managedEmail); // Used as check to show or hide add/edit user forms
@@ -99,6 +101,7 @@ public class ManageUserServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
         String loggedInEmail = (String) session.getAttribute("email");
+        int loggedInRole = (Integer) session.getAttribute("loggedInRole");
         String managedEmail = request.getParameter("email");
         UserService us = new UserService();
         
@@ -111,7 +114,7 @@ public class ManageUserServlet extends HttpServlet {
                     String password = request.getParameter("newPassword");
 
                     if(us.getUser(email) == null) {
-                        us.addUser(email, firstName, lastName,  password);
+                        us.adminAddUser(loggedInEmail, email, firstName, lastName,  password);
                     }  else {
                         String message = "Email is already in use, please choose another";
                         session.setAttribute("message", message);
@@ -130,13 +133,23 @@ public class ManageUserServlet extends HttpServlet {
                     String firstName = request.getParameter("editFName");
                     String lastName = request.getParameter("editLName");
                     int roleId = Integer.parseInt(request.getParameter("role"));
+                    int companyId = 0;
+                    
+                    //Only system admins can change companies of users, if logged in user is a company admin, companyId of managed user 
+                    //remains the same
+                    if(loggedInRole == 1) {
+                        companyId = Integer.parseInt(request.getParameter("company"));
+                    } else if (loggedInRole == 3) {
+                        companyId = us.getUser(email).getCompany().getCompanyId();
+                    }
+                    
                     boolean isActive = false;
                     if(request.getParameter("editIsActive") != null) {
                         isActive = true;
                     }
                     
-                    //LoggedInEmail is used in UserService to ensure logged in Admin cannot change their own role
-                    us.updateUser(loggedInEmail, email, password, firstName, lastName, isActive, roleId);
+                    //LoggedInEmail is used in UserService to ensure logged in Admin cannot change their own role or company
+                    us.adminUpdateUser(loggedInEmail, email, password, firstName, lastName, isActive, roleId, companyId);
                     
                     String message = "User: " + managedEmail + " has been updated";
                     session.setAttribute("message", message);   
@@ -146,7 +159,7 @@ public class ManageUserServlet extends HttpServlet {
                 } 
             }
         } catch (OwnAccountException e) {
-            String message = "Cannot change your own role permissions";
+            String message = "Cannot change your own role, company or active status";
             session.setAttribute("message", message);
             
             response.sendRedirect("manageUsers");

@@ -51,6 +51,14 @@
                                 <option value="${role.roleId}" <c:if test="${editUser.role.roleId == role.roleId}">selected="selected"</c:if>>${role.roleName}</option>
                             </c:forEach>
                         </select>
+                        <c:if test="${loggedInRole == 1}">
+                            <select class="form-select mb-2" name="company">
+                                <c:forEach var="company" items="${companies}">
+                                    <option value="${company.companyId}" <c:if test="${editUser.company.companyId == company.companyId}">selected="selected"</c:if>>${company.companyName}</option>
+                                </c:forEach>
+                            </select>
+                        </c:if>
+
                         <div class="form-check">
                             <input class="form-check-input mb-2" type="checkbox" id="editIsActive" name="editIsActive" <c:if test="${editUser.active}">checked="checked"</c:if>>
                             <label class="form-check-label mb-2" for="editIsActive">Active</label>
@@ -69,9 +77,9 @@
                 <table class="table table-striped table-bordered table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th>Email</th>
                             <th>First Name</th>
                             <th>Last Name</th>
+                            <th>Company</th>
                             <th>Role</th>
                             <th>Status</th>
                             <th>Delete</th>
@@ -81,9 +89,9 @@
                     
                     <c:forEach var="user" items="${users}">
                         <tr>
-                            <td>${user.email}</td>
                             <td>${user.firstName}</td>
                             <td>${user.lastName}</td>
+                            <td>${user.company.companyName}</td>
                             <td>${user.role.roleName}</td>
                             <td>
                                 <c:choose>
