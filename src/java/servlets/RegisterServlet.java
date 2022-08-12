@@ -71,8 +71,9 @@ public class RegisterServlet extends HttpServlet {
                     request.setAttribute("newFirstName", newFirstName);
                     request.setAttribute("newLastName", newLastName);
                     
+                    //Checks if email user is creating account with has already been used
                     if(us.getUser(newEmail) == null) {
-                        us.userAdd(newEmail, newFirstName, newLastName,  newPassword);
+                        us.userAdd(newEmail, newFirstName, newLastName, newPassword);
                         
                         getServletContext().getRequestDispatcher("/WEB-INF/registerConfirmation.jsp").forward(request, response);
                         return;

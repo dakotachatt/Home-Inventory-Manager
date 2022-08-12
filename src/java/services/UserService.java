@@ -33,6 +33,26 @@ public class UserService {
         return user;
     }
     
+    public User getUserByUUID(String uuid) throws Exception {
+        UserDB userDB = new UserDB();
+        User user = userDB.getUserByUUID(uuid);
+        return user;
+    }
+    
+    public void updateUserPassword(User user, String password) throws Exception {
+        UserDB userDB = new UserDB();
+        user.setPassword(password);
+        user.setResetPasswordUuid(null); //removes UUID from user data
+        userDB.userUpdate(user);
+    }
+    
+    public void updateUserUUID(String email, String uuid) throws Exception {
+        UserDB userDB = new UserDB();
+        User user = userDB.getUser(email);
+        user.setResetPasswordUuid(uuid);
+        userDB.userUpdate(user);
+    }
+    
     public void adminAddUser(String loggedInEmail, String email, String firstName, String lastName, String password) throws Exception {
         if(password != null && !password.equals("") && email != null && !email.equals("") && firstName != null && !firstName.equals("") && lastName != null && !lastName.equals("")) {
             UserDB userDB = new UserDB();

@@ -56,6 +56,10 @@
         <servlet-name>ManageCategoryServlet</servlet-name>
         <servlet-class>servlets.ManageCategoryServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <servlet-class>servlets.ResetPasswordServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ManageUserServlet</servlet-name>
         <url-pattern>/manageUsers</url-pattern>
@@ -80,6 +84,10 @@
         <servlet-name>ManageCategoryServlet</servlet-name>
         <url-pattern>/manageCategories</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <url-pattern>/reset</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -88,4 +96,14 @@
     <welcome-file-list>
         <welcome-file>login</welcome-file>
     </welcome-file-list>
+    <env-entry>
+        <env-entry-name>webmail-username</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>saitwebapp@gmail.com</env-entry-value>
+    </env-entry>
+    <env-entry>
+        <env-entry-name>mail-password</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>durenjcjdcirrube</env-entry-value>
+    </env-entry>
 </web-app>

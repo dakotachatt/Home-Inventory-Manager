@@ -1,5 +1,9 @@
 package services;
 
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import models.User;
 
 /**
@@ -26,6 +30,43 @@ public class AccountService {
             return user;
         } else {
             return null;
+        }
+    }
+    
+    public void forgotPassword(String email, String path, String url) {
+        
+        try {
+            UserService us = new UserService();
+            User user = us.getUser(email);
+            
+            if(user != null) {
+                String to = user.getEmail();
+                String subject = "Home nVentory - Password Reset";
+                String template = path + "/templates/resetpassword.html";
+                String uuid = UUID.randomUUID().toString();
+                us.updateUserUUID(email, uuid);
+                String link = url + "?uuid=" + uuid;
+                
+                HashMap<String, String> tags = new HashMap<>();
+                tags.put("firstname", user.getFirstName());
+                tags.put("lastname", user.getLastName());
+                tags.put("link", link);
+                
+                GmailService.sendMail(to, subject, template, tags);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AccountService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void resetPassword(String uuid, String password) {
+        UserService us = new UserService();
+        
+        try {
+            User user = us.getUserByUUID(uuid);
+            us.updateUserPassword(user, password);
+        } catch (Exception ex) {
+//            Logger.getLogger(AccountService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
