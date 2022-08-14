@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Category;
+import models.User;
 import services.CategoryService;
 
 /**
@@ -23,11 +24,18 @@ public class ManageCategoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             HttpSession session = request.getSession();
+            User loggedInUser = (User) session.getAttribute("loggedInUser");
             String managedCategory = request.getParameter("categoryId");
             String action = request.getParameter("action");
             request.setAttribute("currentPage", "manageCategories"); //To determine which navbar option to highlight as active
             CategoryService cs = new CategoryService();
      
+            //Ensures company admin don't have access to manageCategories page
+            if(loggedInUser.getRole().getRoleId() == 3) {
+                response.sendRedirect("manageUsers");
+                return;
+            }
+            
         try {
             List<Category> categories = cs.getAll();
             request.setAttribute("categories", categories);
@@ -64,7 +72,7 @@ public class ManageCategoryServlet extends HttpServlet {
             try {
                 if(action != null) {
                     if(action.equals("add")) {
-                        String categoryName = request.getParameter("newCategoryName");
+                        String categoryName = request.getParameter("newCategoryName").toLowerCase();
                         
                         cs.addCategory(categoryName);
 
@@ -75,7 +83,7 @@ public class ManageCategoryServlet extends HttpServlet {
                         return;
                         
                     } else if (managedCategory != null && action.equals("edit")) {
-                        String categoryName = request.getParameter("editCategoryName");
+                        String categoryName = request.getParameter("editCategoryName").toLowerCase();
                         int categoryId = Integer.parseInt(managedCategory);
                         
                         cs.updateCategory(categoryId, categoryName);

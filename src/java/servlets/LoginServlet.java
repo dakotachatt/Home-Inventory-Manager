@@ -82,6 +82,7 @@ public class LoginServlet extends HttpServlet {
             
         } else if(user != null) { //If login successful, redirect to inventory or admin page
             session.setAttribute("email", user.getEmail());
+            session.setAttribute("loggedInUser", user);
             session.setAttribute("loggedInRole", user.getRole().getRoleId());
 
             if(user.getRole().getRoleId() == 1 || user.getRole().getRoleId() == 3) {

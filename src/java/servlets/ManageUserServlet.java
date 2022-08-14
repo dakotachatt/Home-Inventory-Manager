@@ -57,16 +57,20 @@ public class ManageUserServlet extends HttpServlet {
                 request.setAttribute("userSelected", managedEmail); // Used as check to show or hide add/edit user forms
                 
                 if(action.toLowerCase().equals("delete")) { //Creates a user object to be referenced when deleting the user
-                    us.deleteUser(email, managedEmail); //pass in logged in email as well as email of user to delete to ensure admin cannot delete their own account
+                    boolean didDelete = us.deleteUser(email, managedEmail); //pass in logged in email as well as email of user to delete to ensure admin cannot delete their own account
                     
-                    String message = "User: " + managedEmail + " has been deleted";
-                    session.setAttribute("message", message);
-                    
+                    if(didDelete) {
+                        String message = "User: " + managedEmail + " has been deleted";
+                        session.setAttribute("message", message);
+                    }
                     response.sendRedirect("manageUsers");
                     return;                    
-                } else if (action.toLowerCase().equals("edit")) { //Creates a user object when edit button is clicked in order to pre-fill edit user form
+                } else if (action.toLowerCase().equals("edit")) { //Creates a user object when edit button is clicked in order to pre-fill edit user form     
                     user = us.getUser(managedEmail);
-                    request.setAttribute("editUser", user);                    
+                    //Ensures company admins can only retrieve and edit users in their own company, sys admins can do all
+                    if(loggedInRole == 1 || (loggedInRole == 3 && us.getUser(email).getCompany().equals(user.getCompany()))) {
+                        request.setAttribute("editUser", user);
+                    }                    
                 }
             } else if (action != null) {
                  if (action.toLowerCase().equals("cancel")) {
@@ -119,7 +123,7 @@ public class ManageUserServlet extends HttpServlet {
                         String message = "Email is already in use, please choose another";
                         session.setAttribute("message", message);
                         
-                        getServletContext().getRequestDispatcher("/WEB-INF/manageUsers.jsp").forward(request, response);
+                        response.sendRedirect("manageUsers");
                         return;
                     }
                     String message = "User: " + email + " has been added";
@@ -128,7 +132,7 @@ public class ManageUserServlet extends HttpServlet {
                     response.sendRedirect("manageUsers");
                     return;
                 } else if (action.toLowerCase().equals("edit")) {
-                    String email = managedEmail;
+                    User user = us.getUser(managedEmail);
                     String password = request.getParameter("editPassword");
                     String firstName = request.getParameter("editFName");
                     String lastName = request.getParameter("editLName");
@@ -140,7 +144,7 @@ public class ManageUserServlet extends HttpServlet {
                     if(loggedInRole == 1) {
                         companyId = Integer.parseInt(request.getParameter("company"));
                     } else if (loggedInRole == 3) {
-                        companyId = us.getUser(email).getCompany().getCompanyId();
+                        companyId = us.getUser(managedEmail).getCompany().getCompanyId();
                     }
                     
                     boolean isActive = false;
@@ -149,10 +153,13 @@ public class ManageUserServlet extends HttpServlet {
                     }
                     
                     //LoggedInEmail is used in UserService to ensure logged in Admin cannot change their own role or company
-                    us.adminUpdateUser(loggedInEmail, email, password, firstName, lastName, isActive, roleId, companyId);
-                    
-                    String message = "User: " + managedEmail + " has been updated";
-                    session.setAttribute("message", message);   
+                    //Ensures company admins can only edit users in their own company, sys admins can do all
+                    if(loggedInRole == 1 || (loggedInRole == 3 && us.getUser(loggedInEmail).getCompany().equals(user.getCompany()))) {
+                        us.adminUpdateUser(loggedInEmail, managedEmail, password, firstName, lastName, isActive, roleId, companyId);
+          
+                        String message = "User: " + managedEmail + " has been updated";
+                        session.setAttribute("message", message);
+                    }   
                     
                     response.sendRedirect("manageUsers");
                     return;

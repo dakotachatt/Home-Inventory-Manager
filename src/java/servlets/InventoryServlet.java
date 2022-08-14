@@ -58,7 +58,10 @@ public class InventoryServlet extends HttpServlet {
                 } else if (action.toLowerCase().equals("edit")) {
                     
                     Item item = is.getItem(itemId);
-                    request.setAttribute("editItem", item);
+                    
+                    if(us.getUser(email).equals(item.getOwner())) {
+                        request.setAttribute("editItem", item);
+                    }
                 }
             } else if (action != null) {
                  if (action.toLowerCase().equals("cancel")) {
@@ -87,6 +90,7 @@ public class InventoryServlet extends HttpServlet {
         String action = request.getParameter("action");
         String itemIdString = request.getParameter("itemId");
         System.out.println(itemIdString);
+        UserService us = new UserService();
         ItemService is = new ItemService();
         
         try{
@@ -121,9 +125,11 @@ public class InventoryServlet extends HttpServlet {
                         double price = Double.parseDouble(priceInput);
 
                         is.updateItem(itemId, categoryId, itemName, price, email);
-
-                        String message = "Item has been updated";
-                        session.setAttribute("message", message); 
+                        
+                        if(us.getUser(email).equals(is.getItem(itemId).getOwner())) {
+                            String message = "Item has been updated";
+                            session.setAttribute("message", message); 
+                        }
                     } else {
                         String message = "All fields must be filled in";
                         session.setAttribute("message", message);

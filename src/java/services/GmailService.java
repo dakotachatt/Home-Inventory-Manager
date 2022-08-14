@@ -22,8 +22,6 @@ public class GmailService {
     
     /* Send a templated Email */
     public static void sendMail(String to, String subject, String template, HashMap<String, String> tags) throws Exception {
-        // {{firstname}} -> Anne
-        // {{date}} -> Oct. 28
         String body = "";
         try {
             // read whole template into a single variable (body)
@@ -50,7 +48,7 @@ public class GmailService {
     /* Send a basic Email */
     public static void sendMail(String to, String subject, String body, boolean bodyIsHTML) throws MessagingException, NamingException {
         Context env = (Context) new InitialContext().lookup("java:comp/env/");
-        String username = (String) env.lookup("webmail-username");
+        String username = (String) env.lookup("mail-username");
         String password = (String) env.lookup("mail-password");
 
         System.out.println(username);

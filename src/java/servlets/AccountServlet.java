@@ -34,11 +34,25 @@ public class AccountServlet extends HttpServlet {
             
             if(action != null) {
                 if(action.toLowerCase().equals("back")) {
-                    response.sendRedirect("inventory");
-                    return;
+                    if(user.getRole().getRoleId() == 2) {
+                        response.sendRedirect("inventory");
+                        return;
+                    } else {
+                        response.sendRedirect("manageUsers");
+                        return;
+                    }
                 } else if (action.toLowerCase().equals("deactivate account") && request.getParameter("logout") != null) {
-                    
-                    us.deactivateUser(email);
+                    //Ensures only regular users can deactivate their own account, admins must get another admin to do so
+                    if(user.getRole().getRoleId() == 2) {
+                        us.deactivateUser(email);
+                    } else {
+                        String message = "You cannot deactivate your own administrator account, please contact a system admin";
+                        request.setAttribute("message", message);
+
+                        getServletContext().getRequestDispatcher("/WEB-INF/account.jsp").forward(request, response);
+                        session.setAttribute("message", null);
+                        return;
+                    }
                 
                     session.invalidate();
                     String message = "Your account has been successfully deactivated";
@@ -78,6 +92,9 @@ public class AccountServlet extends HttpServlet {
                     
                     String message = "Your account information has been updated";
                     session.setAttribute("message", message);   
+                    
+                    //Refreshes the user session attribute after user updates their information
+                    session.setAttribute("loggedInUser", us.getUser(email));
                     
                     response.sendRedirect("account");
                     return;

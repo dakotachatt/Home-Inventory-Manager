@@ -4,7 +4,11 @@
     
     <%-- Only shows navbar links if user is logged in --%>
     <c:if test="${email != null}">
-        <div class="navbar-item-container collapse navbar-collapse justify-content-between">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div id="collapsibleNavbar" class="navbar-item-container collapse navbar-collapse justify-content-between">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link <c:if test='${currentPage.equals("inventory")}'>active</c:if>" href="inventory">Inventory</a>
@@ -25,7 +29,7 @@
 
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link <c:if test='${currentPage.equals("account")}'>active</c:if>" href="account">Account Info</a>
+                    <a class="nav-link <c:if test='${currentPage.equals("account")}'>active</c:if>" href="account">${loggedInUser.firstName} ${loggedInUser.lastName}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="login?logout">Logout</a>

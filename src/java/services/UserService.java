@@ -100,7 +100,7 @@ public class UserService {
         }
     }
     
-    public void deleteUser(String loggedInEmail, String emailToDelete) throws Exception {
+    public boolean deleteUser(String loggedInEmail, String emailToDelete) throws Exception {
             UserDB userDB = new UserDB();
             User requestingUser = userDB.getUser(loggedInEmail);
             User user = userDB.getUser(emailToDelete);
@@ -108,10 +108,13 @@ public class UserService {
         if(!loggedInEmail.equals(emailToDelete)) { // Ensures the admin cannot delete their own account
             if(requestingUser.getRole().getRoleId() == 1) {
                 userDB.deleteUser(user);
+                return true;
             } else if(requestingUser.getRole().getRoleId() == 3 && user.getCompany().equals(requestingUser.getCompany())) {
                 userDB.deleteUser(user);
+                return true;
             }
-
+            
+            return false;
         } else {
             throw new OwnAccountException();
         }  

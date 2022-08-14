@@ -35,16 +35,22 @@
                     </c:if>
                 </form>
                 
-                <form class="col-lg-8 col-md-10 col-12" action="inventory" method="get">
+                <form class="col-lg-8 col-md-10 col-12" action="" method="get">
                     <input class="btn btn-outline-primary form-control mb-2" type="submit" name="action" value="Back">
                 </form>
-                    
-                <form class="col-lg-8 col-md-10 col-12 mt-3" action="" method="get">
-                    <p>If you deactivate your account, you must contact an admin to get your account reactivated</p>
-                    <input type="hidden" name="logout" value="">
-                    <input class="btn btn-danger form-control mb-2" type="submit" name="action" value="Deactivate Account">
-                </form>
+                
+                <c:if test="${loggedInRole == 2}">
+                    <form class="col-lg-8 col-md-10 col-12 mt-3" action="" method="get">
+                        <p>If you deactivate your account, you must contact an admin to get your account reactivated</p>
+                        <input type="hidden" name="logout" value="">
+                        <input class="btn btn-danger form-control mb-2" type="submit" name="action" value="Deactivate Account">
+                    </form>
+                </c:if>
             </div>
-        </div>
+        </div>     
+                    
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     </body>
 </html>
