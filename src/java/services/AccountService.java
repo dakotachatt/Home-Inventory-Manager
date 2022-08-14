@@ -33,10 +33,35 @@ public class AccountService {
         }
     }
     
-    public void forgotPassword(String email, String path, String url) {
+    public void newAccountConfirm(String email, String path, String url) {
+        UserService us = new UserService();
         
         try {
-            UserService us = new UserService();
+            User user = us.getUser(email);
+            
+            if(user != null) {
+                String to = user.getEmail();
+                String subject = "Home nVentory - Confirm Account";
+                String template = path + "/templates/welcomeconfirmation.html";
+                String uuid = user.getUuid();
+                String link = url + "?uuid=" + uuid;
+                
+                HashMap<String, String> tags = new HashMap<>();
+                tags.put("firstname", user.getFirstName());
+                tags.put("lastname", user.getLastName());
+                tags.put("link", link);
+                
+                GmailService.sendMail(to, subject, template, tags);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AccountService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void forgotPassword(String email, String path, String url) {
+        UserService us = new UserService();
+        
+        try {
             User user = us.getUser(email);
             
             if(user != null) {
@@ -66,7 +91,7 @@ public class AccountService {
             User user = us.getUserByUUID(uuid);
             us.updateUserPassword(user, password);
         } catch (Exception ex) {
-//            Logger.getLogger(AccountService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AccountService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

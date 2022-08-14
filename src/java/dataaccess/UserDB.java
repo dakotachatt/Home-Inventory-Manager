@@ -59,8 +59,8 @@ public class UserDB {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         
         try {
-            Query query = em.createNamedQuery("User.findByResetPasswordUuid");
-            query.setParameter("resetPasswordUuid", uuid);
+            Query query = em.createNamedQuery("User.findByUuid");
+            query.setParameter("uuid", uuid);
             User user = (User) query.getSingleResult();
             return user;
         } finally {
@@ -164,22 +164,6 @@ public class UserDB {
             trans.commit();
         } catch (Exception e) {
             trans.rollback();
-        } finally {
-            em.close();
-        }
-    }
-    
-    public void deactivateUser(User user) throws Exception {
-        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        EntityTransaction trans = em.getTransaction();
-        
-        try {
-            trans.begin();
-            em.merge(user);
-            trans.commit();
-        } catch (Exception e) {
-            trans.rollback();
-            System.out.println("Error updating user");            
         } finally {
             em.close();
         }

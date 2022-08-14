@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName")
     , @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName")
     , @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")
-    , @NamedQuery(name = "User.findByResetPasswordUuid", query = "SELECT u FROM User u WHERE u.resetPasswordUuid = :resetPasswordUuid")})
+    , @NamedQuery(name = "User.findByUuid", query = "SELECT u FROM User u WHERE u.uuid = :uuid")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,8 +56,8 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "password")
     private String password;
-    @Column(name = "reset_password_uuid")
-    private String resetPasswordUuid;
+    @Column(name = "uuid")
+    private String uuid;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Item> itemList;
     @JoinColumn(name = "company", referencedColumnName = "company_id")
@@ -122,12 +122,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getResetPasswordUuid() {
-        return resetPasswordUuid;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setResetPasswordUuid(String resetPasswordUuid) {
-        this.resetPasswordUuid = resetPasswordUuid;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @XmlTransient

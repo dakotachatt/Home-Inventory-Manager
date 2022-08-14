@@ -5,6 +5,7 @@ import dataaccess.RoleDB;
 import dataaccess.UserDB;
 import exceptions.*;
 import java.util.List;
+import java.util.UUID;
 import models.Company;
 import models.Role;
 import models.User;
@@ -42,14 +43,14 @@ public class UserService {
     public void updateUserPassword(User user, String password) throws Exception {
         UserDB userDB = new UserDB();
         user.setPassword(password);
-        user.setResetPasswordUuid(null); //removes UUID from user data
+        user.setUuid(null); //removes UUID from user data
         userDB.userUpdate(user);
     }
     
     public void updateUserUUID(String email, String uuid) throws Exception {
         UserDB userDB = new UserDB();
         User user = userDB.getUser(email);
-        user.setResetPasswordUuid(uuid);
+        user.setUuid(uuid);
         userDB.userUpdate(user);
     }
     
@@ -82,7 +83,12 @@ public class UserService {
             UserDB userDB = new UserDB();
             RoleDB roleDB = new RoleDB();
             CompanyDB companyDB = new CompanyDB();
-            User user = new User(email, true, firstName, lastName, password);
+            User user = new User(email, false, firstName, lastName, password); //New users not created by admin are deactivated by default
+            
+            //UUID logic for initiating user account activation process
+            String uuid = UUID.randomUUID().toString();
+            user.setUuid(uuid); //Sets new user with uuid to be verified by confirmation link
+            
             Role role = roleDB.getRole(2);
             Company company = companyDB.getCompany(2);
             
@@ -163,11 +169,19 @@ public class UserService {
     }
     
     public void deactivateUser(String email) throws Exception {
-            UserDB userDB = new UserDB();
+        UserDB userDB = new UserDB();
 
-            User user = userDB.getUser(email);
-            user.setActive(false);
+        User user = userDB.getUser(email);
+        user.setActive(false);
 
-            userDB.deactivateUser(user);
+        userDB.userUpdate(user);
+    }
+    
+    public void activateNewUser(User user) throws Exception {
+        UserDB userDB = new UserDB();
+        user.setUuid(null);
+        user.setActive(true);
+        
+        userDB.userUpdate(user);
     }
 }
