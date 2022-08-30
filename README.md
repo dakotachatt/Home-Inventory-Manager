@@ -11,10 +11,8 @@ Languages and frameworks used include: Java, JSP, JSTL, JPA, MySQL, Bootstrap, J
 Features:
   Three types of user permissions
     Regular User: Can access inventory management screen (CRUD functionality), as well as update their account information after account is verified
-  
     Company Admin: Can perform regular user functions as well as manage other users of their own company (CRUD functionality), cannot promote users to system 
     admin
-  
     System admin: Can perform regular user functions as well as manage all users regardless of company, promote and demote users to any role, and manage
     item categories
 
